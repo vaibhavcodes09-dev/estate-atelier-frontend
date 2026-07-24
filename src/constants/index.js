@@ -11,8 +11,7 @@ import {
 
 export const NAV_LINKS = [
   { label: 'Cities', href: '#cities' },
-  { label: 'Buy', href: '#buy' },
-  { label: 'Rent', href: '#rent' },
+  { label: 'Properties', href: 'properties' },
   { label: 'Manage', href: '#manage' },
   { label: 'Finance', href: '#finance' },
 ];
