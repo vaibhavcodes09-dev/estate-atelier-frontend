@@ -5,7 +5,7 @@ import SectionHeading from '../common/SectionHeading';
 
 export default function FeaturedCities() {
   return (
-    <section className="container-px py-20 lg:py-28">
+    <section className="container-px py-14 lg:py-16">
       <SectionHeading
         eyebrow="Top Destinations"
         title="Explore properties in India's prime cities"
