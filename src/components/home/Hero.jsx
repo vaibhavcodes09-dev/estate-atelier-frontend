@@ -29,14 +29,29 @@ const Hero = () => {
   }, [isFocused, searchValue]);
 
   return (
-    <section className="relative w-full flex flex-col">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="relative w-full flex flex-col"
+    >
       {/* 
         Hero Image Area 
         Set a fixed height to allow the search box to overlap the bottom edge
       */}
       <div className="relative w-full h-[30vh] min-h-[360px] overflow-hidden">
         {/* Replace the URL with your saved hero image */}
-        <div
+        <motion.div
+          initial={{
+            scale: 1.08,
+          }}
+          animate={{
+            scale: 1,
+          }}
+          transition={{
+            duration: 1.5,
+            ease: "easeOut",
+          }}
           className="absolute inset-0 bg-cover bg-[center_40%] bg-no-repeat"
           style={{
             backgroundImage: `url(${heroImg})`,
@@ -50,9 +65,19 @@ const Hero = () => {
       */}
       <div className="relative z-20 w-full max-w-[1100px] mx-auto px-4 sm:px-6 -mt-16 mb-16">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
+          initial={{
+            opacity: 0,
+            y: 60,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            delay: 0.2,
+            duration: 0.7,
+            ease: "easeOut",
+          }}
           className="bg-white rounded-[1.25rem] shadow-[0_12px_40px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden flex flex-col"
         >
           {/* Top Row: Tabs & Post Property */}
@@ -163,7 +188,7 @@ const Hero = () => {
           </div>
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

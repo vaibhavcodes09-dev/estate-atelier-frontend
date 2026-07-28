@@ -250,10 +250,12 @@ const Navbar = () => {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "100vh" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ y: -40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{
+              duration: 0.6,
+              ease: "easeOut",
+            }}
             className="lg:hidden absolute top-20 left-0 w-full bg-white shadow-xl overflow-y-auto border-t border-gray-100"
             style={{ height: "calc(100vh - 80px)" }}
           >
