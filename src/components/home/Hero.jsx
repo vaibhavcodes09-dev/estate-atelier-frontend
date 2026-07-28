@@ -52,7 +52,7 @@ const Hero = () => {
             duration: 1.5,
             ease: "easeOut",
           }}
-          className="absolute inset-0 bg-cover bg-[center_40%] bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-[center_30%] bg-no-repeat"
           style={{
             backgroundImage: `url(${heroImg})`,
           }}
@@ -83,8 +83,8 @@ const Hero = () => {
           {/* Top Row: Tabs & Post Property */}
           <div className="flex items-center justify-between px-2 sm:px-6 border-b border-gray-100 bg-white">
             {/* Tabs */}
-            <div className="flex items-center gap-2 sm:gap-6 h-[60px]">
-              {["Buy", "Rent"].map((tab) => (
+            <div className="flex items-center gap-2 sm:gap-6 h-[60px] overflow-auto scrollbar-none">
+              {["Buy", "Rent", "New Launch", "Commercial", "Plots/Land", "Projects"].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
