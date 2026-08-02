@@ -90,7 +90,7 @@ const Navbar = () => {
     },
   };
 
-  const textColorClass = isScrolled ? "text-slate-900" : "text-white";
+  const textColorClass = isScrolled ? "text-slate-900" : "text-slate-900";
   const bgColorClass = isScrolled
     ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100"
     : "bg-transparent";
@@ -119,7 +119,7 @@ const Navbar = () => {
               className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-colors duration-300 ${isScrolled ? "border-gray-200 bg-gray-50" : "border-white/20 bg-white/10"}`}
             >
               <FiMapPin
-                className={`w-4 h-4 ${isScrolled ? "text-indigo-600" : "text-white"}`}
+                className={`w-4 h-4 text-indigo-600`}
               />
               <span className={`text-sm font-medium ${textColorClass}`}>
                 Etawah

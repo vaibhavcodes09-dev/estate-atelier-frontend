@@ -1,14 +1,39 @@
-import Hero from '@/components/home/Hero';
-import RecommendedProperties from '../components/home/RecommendedProperties';
+import { lazy, Suspense } from "react";
 
-// Home page — assembles all existing landing-page sections.
-// This is the same composition that was previously in pages/Home.jsx,
-// now rendered inside MainLayout via the router.
+import Hero from "../components/home/Hero";
+const RecommendedProperties = lazy(
+  () => import("../components/home/RecommendedProperties"),
+);
+const WhyChooseUs = lazy(() => import("../components/home/WhyChooseUs"));
+const PopularLocations = lazy(
+  () => import("../components/home/PopularLocations"),
+);
+const Testimonials = lazy(() => import("../components/home/Testimonials"));
+const CallToAction = lazy(() => import("../components/home/CallToAction"));
+
 export default function Home() {
   return (
     <>
       <Hero />
-      <RecommendedProperties />
+      <Suspense fallback={<div>Loading properties...</div>}>
+        <RecommendedProperties />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <WhyChooseUs />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading locations...</div>}>
+        <PopularLocations />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading testimonials...</div>}>
+        <Testimonials />
+      </Suspense>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <CallToAction />
+      </Suspense>
     </>
   );
 }

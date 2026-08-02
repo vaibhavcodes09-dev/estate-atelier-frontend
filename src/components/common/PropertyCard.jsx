@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiMapPin, FiArrowRight } from 'react-icons/fi';
+import { FiHeart } from 'react-icons/fi';
+import { ChevronRight } from 'lucide-react';
 
+// --- PropertyCard Component ---
 const PropertyCard = ({ property }) => {
   return (
     <motion.div 
@@ -9,52 +11,51 @@ const PropertyCard = ({ property }) => {
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
-      className="group relative flex-shrink-0 w-[300px] sm:w-[340px] bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 transition-shadow duration-500 overflow-hidden snap-start"
+      // Changed to w-full to fill the grid column, removed snap-start and flex-shrink
+      className="group relative w-full bg-[#FFFFFF] rounded-[24px] shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] border border-gray-100 transition-all duration-500 overflow-hidden"
     >
       {/* Top Half: Image Container */}
-      <div className="relative h-[220px] w-full overflow-hidden bg-gray-100">
+      <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
         <img 
           src={property.image} 
           alt={property.title}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           loading="lazy"
         />
         
-        {/* Gradient Overlay for better contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-        {/* Hover Action Button (Pop up) */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 ease-out z-10">
-          <button className="bg-white/95 backdrop-blur-sm text-indigo-600 px-6 py-2.5 rounded-full text-sm font-semibold shadow-lg flex items-center gap-2 hover:bg-indigo-600 hover:text-white transition-colors">
-            View Details
-            <FiArrowRight className="w-4 h-4" />
-          </button>
+        {/* Top Badges */}
+        <div className="absolute top-4 left-4">
+          <span className="bg-[#FFFFFF] text-[#0E2248] text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+            For Sale
+          </span>
         </div>
+        
+        {/* Heart Icon with Accent Color on Hover */}
+        <button className="absolute top-4 right-4 text-white hover:text-[#E93946] transition-colors drop-shadow-md">
+          <FiHeart className="w-5 h-5 stroke-2" />
+        </button>
       </div>
 
       {/* Bottom Half: Details */}
-      <div className="p-5 sm:p-6">
-        {/* Price */}
-        <h3 className="text-2xl font-bold text-slate-900 mb-1.5 tracking-tight">
-          {property.price}
+      <div className="p-5">
+        {/* Title (Text Color) */}
+        <h3 className="text-[17px] font-bold text-[#1D2433] mb-1 tracking-tight">
+          {property.title}
         </h3>
         
-        {/* BHK & Sq.Fts */}
-        <div className="flex items-center gap-2 text-[15px] font-medium text-gray-500 mb-4">
-          <span>{property.bhk} BHK</span>
-          <span className="w-1 h-1 rounded-full bg-gray-300" />
-          <span>{property.sqft} Sq.Ft.</span>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px w-full bg-gray-100 mb-4" />
-
         {/* Location */}
-        <div className="flex items-start gap-2 text-gray-600">
-          <FiMapPin className="w-4 h-4 mt-0.5 shrink-0 text-indigo-500" />
-          <p className="text-sm font-medium leading-relaxed truncate">
-            {property.location}
-          </p>
+        <p className="text-[13px] font-medium text-slate-500 mb-5">
+          {property.location}
+        </p>
+
+        {/* Price (Primary Color) and Area Row */}
+        <div className="flex items-center justify-between">
+          <span className="text-[18px] font-bold text-[#0E2248]">
+            {property.price}
+          </span>
+          <span className="text-[13px] font-medium text-slate-500">
+            {property.sqft} sq.ft
+          </span>
         </div>
       </div>
     </motion.div>

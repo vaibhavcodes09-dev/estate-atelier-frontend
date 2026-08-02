@@ -1,72 +1,137 @@
-import { FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiYoutube, FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
-import { NAV_LINKS } from '@/constants';
+import React from 'react';
+import { 
+  Facebook, 
+  Twitter, 
+  Instagram, 
+  Linkedin, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  ArrowRight 
+} from 'lucide-react';
+import squareupLogo from '../../assets/squareup-logo.jpg'
 
-const FOOTER_LINKS = {
-  Company: ['About Us', 'Careers', 'Press', 'Blog', 'Contact'],
-  Services: ['Residential', 'Commercial', 'Investments', 'Home Loans', 'Property Management'],
-  Resources: ['Market Reports', 'EMI Calculator', 'Area Converter', 'Property Guides', 'RERA Info'],
-};
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
 
-const SOCIALS = [
-  { icon: FiFacebook, label: 'Facebook' },
-  { icon: FiTwitter, label: 'Twitter' },
-  { icon: FiInstagram, label: 'Instagram' },
-  { icon: FiLinkedin, label: 'LinkedIn' },
-  { icon: FiYoutube, label: 'YouTube' },
-];
-
-export default function Footer() {
   return (
-    <footer className="bg-ink-950 text-white">
-      <div className="container-px py-16">
-        <div className="grid gap-12 lg:grid-cols-[1.5fr_2fr]">
-          {/* Brand */}
-          <div className="flex flex-col gap-5">
-            <a href="#home" className="flex items-center gap-2.5">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-500 text-white">
-                <span className="font-display text-lg font-bold">EA</span>
-              </span>
-              <span className="font-display text-xl font-bold">Estate<span className="text-brand-500">Atelier</span></span>
-            </a>
-            <p className="max-w-sm text-sm leading-relaxed text-white/50">
-              India's most trusted real estate advisory. We help you discover, buy, and invest in premium properties with complete transparency.
-            </p>
-            <div className="flex flex-col gap-2 text-sm text-white/60">
-              <a href="tel:+910000000000" className="flex items-center gap-2 transition hover:text-white"><FiPhone className="h-4 w-4" /> +91 90000 00000</a>
-              <a href="mailto:hello@estateatelier.in" className="flex items-center gap-2 transition hover:text-white"><FiMail className="h-4 w-4" /> hello@estateatelier.in</a>
-              <span className="flex items-center gap-2"><FiMapPin className="h-4 w-4" /> Bandra Kurla Complex, Mumbai 400051</span>
+    <footer className="w-full bg-[#0E2248] pt-16 pb-8">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
+          
+          {/* Column 1: Brand (Logo) & About */}
+          <div className="lg:pr-8">
+            {/* Logo Container */}
+            <div className="mb-6 flex items-center">
+              <img 
+                src={squareupLogo} 
+                alt="Company Logo" 
+                className="h-12 w-auto object-contain rounded-lg" // specific height, aspect ratio preserved
+              />
             </div>
-            <div className="flex gap-3 pt-2">
-              {SOCIALS.map((s) => (
-                <a key={s.label} href="#" aria-label={s.label} className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition hover:border-brand-500 hover:bg-brand-500 hover:text-white">
-                  <s.icon className="h-4 w-4" />
+            
+            <p className="text-slate-300 text-[14px] leading-relaxed mb-8 font-medium">
+              We make finding your dream home simple, transparent, and hassle-free. Serving the best properties across the region with 100% verified listings.
+            </p>
+            
+            {/* Social Links */}
+            <div className="flex items-center gap-4">
+              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, index) => (
+                <a 
+                  key={index}
+                  href="#" 
+                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#E93946] transition-all duration-300"
+                >
+                  <Icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Links */}
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-            {Object.entries(FOOTER_LINKS).map(([title, links]) => (
-              <div key={title} className="flex flex-col gap-3">
-                <h4 className="text-sm font-bold uppercase tracking-wide text-white/80">{title}</h4>
-                {links.map((link) => (
-                  <a key={link} href="#" className="text-sm text-white/50 transition hover:text-white">{link}</a>
-                ))}
-              </div>
-            ))}
+          {/* Column 2: Quick Links */}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-6">Quick Links</h3>
+            <ul className="space-y-4">
+              {['Home', 'About Us', 'All Properties', 'Agents', 'Contact Us'].map((link, index) => (
+                <li key={index}>
+                  <a 
+                    href="#" 
+                    className="group flex items-center text-[14px] font-medium text-slate-300 hover:text-[#E93946] transition-colors"
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2 opacity-0 -ml-6 transition-all duration-300 group-hover:opacity-100 group-hover:ml-0" />
+                    {link}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Top Cities */}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-6">Top Cities</h3>
+            <ul className="space-y-4">
+              {['Etawah', 'Jaswant Nagar', 'Saifai', 'Bharthana', 'Sirsaganj'].map((city, index) => (
+                <li key={index}>
+                  <a 
+                    href={`/locations/${city.toLowerCase().replace(' ', '-')}`} 
+                    className="group flex items-center text-[14px] font-medium text-slate-300 hover:text-[#E93946] transition-colors"
+                  >
+                    <ArrowRight className="w-4 h-4 mr-2 opacity-0 -ml-6 transition-all duration-300 group-hover:opacity-100 group-hover:ml-0" />
+                    {city}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Contact Info */}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-6">Contact Us</h3>
+            <ul className="space-y-5">
+              <li className="flex items-start gap-3 text-slate-300">
+                <MapPin className="w-5 h-5 text-[#E93946] shrink-0 mt-0.5" />
+                <span className="text-[14px] font-medium leading-relaxed">
+                  123 Main Market Road,<br />
+                  Jaswant Nagar, UP 206245
+                </span>
+              </li>
+              <li className="flex items-center gap-3 text-slate-300">
+                <Phone className="w-5 h-5 text-[#E93946] shrink-0" />
+                <a href="tel:+919876543210" className="text-[14px] font-medium hover:text-[#E93946] transition-colors">
+                  +91 98765 43210
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-slate-300">
+                <Mail className="w-5 h-5 text-[#E93946] shrink-0" />
+                <a href="mailto:contact@realestate.com" className="text-[14px] font-medium hover:text-[#E93946] transition-colors">
+                  contact@realestate.com
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom Divider & Copyright */}
+        <div className="border-t border-white/10 pt-8 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <p className="text-slate-400 text-[13px] font-medium">
+            © {currentYear} RealEstate. All rights reserved.
+          </p>
+          <div className="flex items-center gap-6">
+            <a href="#" className="text-slate-400 text-[13px] font-medium hover:text-white transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="text-slate-400 text-[13px] font-medium hover:text-white transition-colors">
+              Terms of Service
+            </a>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-white/40 sm:flex-row">
-          <p>© 2026 Estate Atelier. All rights reserved.</p>
-          <div className="flex gap-6">
-            <a href="#" className="transition hover:text-white">Privacy Policy</a>
-            <a href="#" className="transition hover:text-white">Terms of Service</a>
-            <a href="#" className="transition hover:text-white">RERA Disclosure</a>
-          </div>
-        </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;
