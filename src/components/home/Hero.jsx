@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence  } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, ChevronDown, Home, Clock, Users } from "lucide-react";
 import { FiSearch, FiMapPin, FiChevronDown, FiTarget } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import heroImg from "../../assets/hero.avif";
 import { searchSuggestions } from "../../data/dummydata";
 
 const RealEstateHero = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Buy");
   const [searchValue, setSearchValue] = useState("");
   const [suggestionIndex, setSuggestionIndex] = useState(0);
@@ -41,6 +42,17 @@ const RealEstateHero = () => {
     },
   };
 
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+
+    if (searchValue.trim()) {
+      params.set("q", searchValue.trim());
+    }
+
+    params.set("purpose", activeTab.toLowerCase());
+
+    navigate(`/properties?${params.toString()}`);
+  };
   return (
     <section className="relative pt-14 min-h-screen overflow-hidden">
       {/* Background */}
@@ -114,12 +126,7 @@ const RealEstateHero = () => {
             <div className="flex items-center justify-between px-2 sm:px-6 border-b border-gray-100 bg-white">
               {/* Tabs */}
               <div className="flex items-center gap-2 sm:gap-6 h-[60px] overflow-x-scroll no-scrollbar">
-                {[
-                  "Buy",
-                  "Rent",
-                  "Commercial",
-                  "Plots/Land",
-                ].map((tab) => (
+                {["Buy", "Rent", "Commercial", "Plots/Land"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -144,7 +151,6 @@ const RealEstateHero = () => {
                   </button>
                 ))}
               </div>
-
             </div>
 
             {/* Bottom Row: Search Input Area */}
@@ -168,6 +174,11 @@ const RealEstateHero = () => {
                     onChange={(e) => setSearchValue(e.target.value)}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearch();
+                      }
+                    }}
                     className="w-full h-full bg-transparent text-slate-800 text-[15px] font-medium focus:outline-none z-10"
                     aria-label="Search properties"
                   />
@@ -206,58 +217,66 @@ const RealEstateHero = () => {
           </motion.div>
         </div>
         {/* Stats Card */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-            className="bg-gradient-to-r from-white to-transparent rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] py-7 px-8 lg:px-10 w-full max-w-[850px] relative z-20 flex flex-wrap lg:flex-nowrap justify-between items-center mt-1 gap-6 lg:gap-0"
-          >
-            <div className="flex items-center gap-4">
-              <div className="text-gray-400">
-                <Home size={28} strokeWidth={1.5} />
-              </div>
-              <div>
-                <div className="text-[#0B1D35] font-bold text-xl">500+</div>
-                <div className="text-gray-400 text-xs font-medium">Verified Properties</div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.6 }}
+          className="bg-gradient-to-r from-white to-transparent rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] py-7 px-8 lg:px-10 w-full max-w-[850px] relative z-20 flex flex-wrap lg:flex-nowrap justify-between items-center mt-1 gap-6 lg:gap-0"
+        >
+          <div className="flex items-center gap-4">
+            <div className="text-gray-400">
+              <Home size={28} strokeWidth={1.5} />
+            </div>
+            <div>
+              <div className="text-[#0B1D35] font-bold text-xl">500+</div>
+              <div className="text-gray-400 text-xs font-medium">
+                Verified Properties
               </div>
             </div>
+          </div>
 
-            <div className="hidden lg:block w-px h-10 bg-gray-100"></div>
+          <div className="hidden lg:block w-px h-10 bg-gray-100"></div>
 
-            <div className="flex items-center gap-4">
-              <div className="text-gray-400">
-                <MapPin size={28} strokeWidth={1.5} />
-              </div>
-              <div>
-                <div className="text-[#0B1D35] font-bold text-xl">20+</div>
-                <div className="text-gray-400 text-xs font-medium">Cities Covered</div>
+          <div className="flex items-center gap-4">
+            <div className="text-gray-400">
+              <MapPin size={28} strokeWidth={1.5} />
+            </div>
+            <div>
+              <div className="text-[#0B1D35] font-bold text-xl">20+</div>
+              <div className="text-gray-400 text-xs font-medium">
+                Cities Covered
               </div>
             </div>
+          </div>
 
-            <div className="hidden lg:block w-px h-10 bg-gray-100"></div>
+          <div className="hidden lg:block w-px h-10 bg-gray-100"></div>
 
-            <div className="flex items-center gap-4">
-              <div className="text-gray-400">
-                <Users size={28} strokeWidth={1.5} />
-              </div>
-              <div>
-                <div className="text-[#0B1D35] font-bold text-xl">98%</div>
-                <div className="text-gray-400 text-xs font-medium">Happy Clients</div>
+          <div className="flex items-center gap-4">
+            <div className="text-gray-400">
+              <Users size={28} strokeWidth={1.5} />
+            </div>
+            <div>
+              <div className="text-[#0B1D35] font-bold text-xl">98%</div>
+              <div className="text-gray-400 text-xs font-medium">
+                Happy Clients
               </div>
             </div>
+          </div>
 
-            <div className="hidden lg:block w-px h-10 bg-gray-100"></div>
+          <div className="hidden lg:block w-px h-10 bg-gray-100"></div>
 
-            <div className="flex items-center gap-4">
-              <div className="text-gray-400">
-                <Clock size={28} strokeWidth={1.5} />
-              </div>
-              <div>
-                <div className="text-[#0B1D35] font-bold text-xl">24/7</div>
-                <div className="text-gray-400 text-xs font-medium">Expert Support</div>
+          <div className="flex items-center gap-4">
+            <div className="text-gray-400">
+              <Clock size={28} strokeWidth={1.5} />
+            </div>
+            <div>
+              <div className="text-[#0B1D35] font-bold text-xl">24/7</div>
+              <div className="text-gray-400 text-xs font-medium">
+                Expert Support
               </div>
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

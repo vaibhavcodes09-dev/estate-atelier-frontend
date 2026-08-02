@@ -35,7 +35,7 @@ const RecommendedProperties = () => {
 
           {/* View All Properties Link (Top Right) */}
           <Link 
-            to="/all-properties" 
+            to="/properties" 
             className="group flex items-center gap-1 text-[15px] font-semibold text-[#0E2248] hover:text-[#E93946] transition-colors"
           >
             View all properties

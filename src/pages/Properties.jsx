@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, SlidersHorizontal, MapPin, Heart, X } from "lucide-react";
-import { propertiesData } from "../data/dummydata"
-import { Link } from "react-router-dom";
-
+import { propertiesData } from "../data/dummydata";
+import { Link, useSearchParams } from "react-router-dom";
 
 // Extract unique filter options
 const locations = [...new Set(propertiesData.map((p) => p.location))];
@@ -18,6 +17,25 @@ const Properties = () => {
   const [selectedBhk, setSelectedBhk] = useState("All");
   const [maxPrice, setMaxPrice] = useState(30000000); // Default to max 3 Cr
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // For Hero Section Search
+  const [searchParams] = useSearchParams();
+  const q = searchParams.get("q");
+  const purpose = searchParams.get("purpose");
+  const type = searchParams.get("type");
+
+  const filtered = propertiesData.filter((property) => {
+    const matchesSearch =
+      !q ||
+      property.location.toLowerCase().includes(q.toLowerCase()) ||
+      property.title.toLowerCase().includes(q.toLowerCase());
+
+    const matchesPurpose = !purpose || property.purpose === purpose;
+
+    const matchesType = !type || property.type === type;
+
+    return matchesSearch && matchesPurpose && matchesType;
+  });
 
   // High-performance filtering using useMemo
   const filteredProperties = useMemo(() => {
