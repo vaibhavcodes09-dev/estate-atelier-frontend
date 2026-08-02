@@ -5,6 +5,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FiHeart } from 'react-icons/fi';
 import { ChevronRight } from 'lucide-react';
+import { Link } from "react-router-dom";
 
 
 // --- RecommendedProperties Section ---
@@ -82,13 +83,13 @@ const RecommendedProperties = () => {
           </div>
 
           {/* View All Properties Link (Top Right) */}
-          <a 
-            href="/all-properties" 
+          <Link 
+            to="/all-properties" 
             className="group flex items-center gap-1 text-[15px] font-semibold text-[#0E2248] hover:text-[#E93946] transition-colors"
           >
             View all properties
             <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-          </a>
+          </Link>
         </motion.div>
 
         {/* Grid Display (Max 4 Items, No Sliding) */}

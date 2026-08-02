@@ -1,591 +1,352 @@
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  FiHome,
-  FiMapPin,
-  FiDollarSign,
-  FiMaximize,
-  FiUser,
-  FiPhone,
-  FiUploadCloud,
-  FiCheckCircle,
-  FiAlertCircle,
-  FiX,
-} from "react-icons/fi";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { 
+  Home, MapPin, IndianRupee, ImagePlus, 
+  UploadCloud, Check, CheckCircle2, ChevronRight 
+} from 'lucide-react';
 
-// Zod Validation Schema
-const propertySchema = z.object({
-  uploaderRole: z.enum(["Owner", "Agent", "Builder"], {
-    required_error: "Please select who is uploading.",
-  }),
-  intent: z.enum(["Rent/Lease", "Sell"], {
-    required_error: "Please select an intent.",
-  }),
-  category: z.enum(["Residential", "Commercial"], {
-    required_error: "Please select a category.",
-  }),
-  propertyType: z.string().min(1, "Please select a property type."),
-  bhk: z.string().optional(),
-  sqft: z.string().min(1, "Square footage is required."),
-  location: z.string().min(5, "Please enter a detailed location."),
-  price: z.string().min(1, "Price is required."),
-  details: z
-    .string()
-    .min(20, "Please provide at least 20 characters of details."),
-  sellerName: z.string().min(2, "Seller name is required."),
-  sellerNumber: z
-    .string()
-    .regex(/^[0-9]{10}$/, "Enter a valid 10-digit phone number."),
-});
-
-const RESIDENTIAL_TYPES = ["Flat/Apartment", "Individual House", "Plot/Land"];
-const COMMERCIAL_TYPES = [
-  "Office",
-  "Retail",
-  "Plot/Land",
-  "Storage",
-  "Industry",
-  "Other",
-];
-
-export default function AddProperty() {
-  const [images, setImages] = useState([]);
-  const [imageError, setImageError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(propertySchema),
-    defaultValues: {
-      uploaderRole: "Owner",
-      intent: "Sell",
-      category: "Residential",
-      propertyType: "",
-    },
+const AddProperty = () => {
+  // --- Form State ---
+  const [formData, setFormData] = useState({
+    title: '',
+    status: 'For Sale',
+    type: 'Villa',
+    price: '',
+    area: '',
+    bhk: '3',
+    bathrooms: '2',
+    address: '',
+    city: 'Jaswant Nagar',
+    description: '',
+    amenities: [],
   });
 
-  const selectedCategory = watch("category");
-  const selectedType = watch("propertyType");
-  const showBhk =
-    !["Plot/Land", "Storage", "Industry", "Retail"].includes(selectedType) &&
-    selectedType !== "";
+  // --- Options ---
+  const propertyTypes = ['Apartment', 'Villa', 'Independent House', 'Builder Floor', 'Commercial'];
+  const bhkOptions = ['1', '2', '3', '4', '5+'];
+  const cities = ['Etawah', 'Jaswant Nagar', 'Saifai', 'Bharthana', 'Sirsaganj'];
+  const amenitiesList = [
+    '24/7 Security', 'Power Backup', 'Car Parking', 
+    'Swimming Pool', 'Gymnasium', 'Garden', 
+    'Elevator', 'Vastu Compliant', 'Club House'
+  ];
 
-  // Reset property type when category changes to prevent invalid states
-  useEffect(() => {
-    setValue("propertyType", "");
-  }, [selectedCategory, setValue]);
+  // --- Handlers ---
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    if (images.length + files.length > 8) {
-      setImageError("You can only upload up to 8 images.");
-      return;
-    }
-    setImageError("");
-
-    // Create preview URLs
-    const newImages = files.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      id: Math.random().toString(36).substring(7),
+  const toggleAmenity = (amenity) => {
+    setFormData(prev => ({
+      ...prev,
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter(a => a !== amenity)
+        : [...prev.amenities, amenity]
     }));
-
-    setImages((prev) => [...prev, ...newImages]);
   };
 
-  const removeImage = (idToRemove) => {
-    setImages((prev) => prev.filter((img) => img.id !== idToRemove));
-    if (imageError) setImageError("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form Submitted:', formData);
+    // Add API submission logic here
   };
 
-  const onSubmit = async (data) => {
-    if (images.length < 2) {
-      setImageError(
-        "Please upload at least 2 images to showcase the property.",
-      );
-      return;
+  // Animation variants for staggering sections
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
     }
-
-    setIsSubmitting(true);
-    // Mock API Call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Form Data:", data);
-    console.log(
-      "Images:",
-      images.map((i) => i.file),
-    );
-
-    setIsSubmitting(false);
-    setSubmitSuccess(true);
-
-    // Clean up previews to avoid memory leaks
-    images.forEach((img) => URL.revokeObjectURL(img.preview));
   };
 
-  // Shared component for Custom Radio Buttons (Cards)
-  const RadioCard = ({ name, value, currentVal, label, colSpan = 1 }) => {
-    const isSelected = currentVal === value;
-    return (
-      <label className={`cursor-pointer group relative col-span-${colSpan}`}>
-        <input
-          type="radio"
-          value={value}
-          className="peer sr-only"
-          {...register(name)}
-        />
-        <div
-          className={`
-    p-4 rounded-xl border-2 text-center transition-all duration-200
-    ${
-      isSelected
-        ? "border-indigo-600 bg-indigo-50 text-indigo-700 shadow-lg"
-        : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
-    }
-  `}
-        >
-          <span className="font-semibold text-sm">{label || value}</span>
-        </div>
-      </label>
-    );
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
-
-  if (submitSuccess) {
-    return (
-      <div className="w-full max-w-2xl mx-auto py-20 px-6 text-center">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-3xl p-10 shadow-lg border border-gray-100"
-        >
-          <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <FiCheckCircle className="w-10 h-10" />
-          </div>
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">
-            Property Listed Successfully!
-          </h2>
-          <p className="text-gray-500 mb-8">
-            Your property is now under review and will be live shortly.
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors"
-          >
-            Post Another Property
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
-    <div className="w-full max-w-[900px] mx-auto pb-20">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-          Post Your Property
-        </h1>
-        <p className="text-gray-500 mt-2">
-          Fill in the details below to list your property on the market.
-        </p>
-      </div>
+    <div className="min-h-screen bg-[#F8FAFC] pb-20 pt-8">
+      <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Breadcrumbs */}
+        <nav className="flex items-center text-[13px] font-medium text-slate-500 mb-6">
+          <a href="/" className="hover:text-[#E93946] transition-colors">Home</a>
+          <ChevronRight className="w-4 h-4 mx-2" />
+          <span className="text-[#0E2248]">Add New Property</span>
+        </nav>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
-        {/* SECTION 1: Basic Classification */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-[2rem] p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100"
-        >
-          <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <span className="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">
-              1
-            </span>
-            Basic Details
-          </h2>
-
-          <div className="space-y-6">
-            {/* Role */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Who is uploading?
-              </label>
-              <div className="grid grid-cols-3 gap-3">
-                <RadioCard
-                  name="uploaderRole"
-                  value="Owner"
-                  currentVal={watch("uploaderRole")}
-                />
-                <RadioCard
-                  name="uploaderRole"
-                  value="Agent"
-                  currentVal={watch("uploaderRole")}
-                />
-                <RadioCard
-                  name="uploaderRole"
-                  value="Builder"
-                  currentVal={watch("uploaderRole")}
-                />
-              </div>
-            </div>
-
-            {/* Intent & Category */}
-            <div className="grid sm:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Property Intent
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <RadioCard
-                    name="intent"
-                    value="Sell"
-                    currentVal={watch("intent")}
-                  />
-                  <RadioCard
-                    name="intent"
-                    value="Rent/Lease"
-                    currentVal={watch("intent")}
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Property Category
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <RadioCard
-                    name="category"
-                    value="Residential"
-                    currentVal={selectedCategory}
-                  />
-                  <RadioCard
-                    name="category"
-                    value="Commercial"
-                    currentVal={selectedCategory}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Property Type */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Property Type
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {(selectedCategory === "Residential"
-                  ? RESIDENTIAL_TYPES
-                  : COMMERCIAL_TYPES
-                ).map((type) => (
-                  <RadioCard
-                    key={type}
-                    name="propertyType"
-                    value={type}
-                    currentVal={selectedType}
-                  />
-                ))}
-              </div>
-              {errors.propertyType && (
-                <p className="mt-2 text-xs text-red-500 font-medium">
-                  {errors.propertyType.message}
-                </p>
-              )}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* SECTION 2: Property Specifics */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-[2rem] p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100"
-        >
-          <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <span className="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">
-              2
-            </span>
-            Property Specifics
-          </h2>
-
-          <div className="grid sm:grid-cols-2 gap-6 mb-6">
-            <AnimatePresence mode="popLayout">
-              {showBhk && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                >
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    BHK
-                  </label>
-                  <select
-                    {...register("bhk")}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 outline-none transition-all"
-                  >
-                    <option value="">Select BHK</option>
-                    <option value="1">1 BHK</option>
-                    <option value="2">2 BHK</option>
-                    <option value="3">3 BHK</option>
-                    <option value="4">4 BHK</option>
-                    <option value="5+">5+ BHK</option>
-                  </select>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Square Footage
-              </label>
-              <div className="relative">
-                <FiMaximize className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="number"
-                  placeholder="e.g. 1500"
-                  {...register("sqft")}
-                  className={`w-full bg-gray-50 pl-11 pr-4 py-3.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-4 focus:bg-white ${
-                    errors.sqft
-                      ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                      : "border-gray-200 focus:border-indigo-500 focus:ring-indigo-50"
-                  }`}
-                />
-              </div>
-              {errors.sqft && (
-                <p className="mt-1 text-xs text-red-500 font-medium">
-                  {errors.sqft.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Price (in ₹)
-              </label>
-              <div className="relative">
-                <FiDollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="number"
-                  placeholder="e.g. 7500000"
-                  {...register("price")}
-                  className={`w-full bg-gray-50 pl-11 pr-4 py-3.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-4 focus:bg-white ${
-                    errors.price
-                      ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                      : "border-gray-200 focus:border-indigo-500 focus:ring-indigo-50"
-                  }`}
-                />
-              </div>
-              {errors.price && (
-                <p className="mt-1 text-xs text-red-500 font-medium">
-                  {errors.price.message}
-                </p>
-              )}
-            </div>
-
-            <div className={showBhk ? "" : "sm:col-span-2"}>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Location
-              </label>
-              <div className="relative">
-                <FiMapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Street, Area, City"
-                  {...register("location")}
-                  className={`w-full bg-gray-50 pl-11 pr-4 py-3.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-4 focus:bg-white ${
-                    errors.location
-                      ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                      : "border-gray-200 focus:border-indigo-500 focus:ring-indigo-50"
-                  }`}
-                />
-              </div>
-              {errors.location && (
-                <p className="mt-1 text-xs text-red-500 font-medium">
-                  {errors.location.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Property Details
-            </label>
-            <textarea
-              rows="4"
-              placeholder="Describe the property, amenities, nearby facilities..."
-              {...register("details")}
-              className={`w-full bg-gray-50 px-4 py-3.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-4 focus:bg-white resize-none ${
-                errors.details
-                  ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                  : "border-gray-200 focus:border-indigo-500 focus:ring-indigo-50"
-              }`}
-            />
-            {errors.details && (
-              <p className="mt-1 text-xs text-red-500 font-medium">
-                {errors.details.message}
-              </p>
-            )}
-          </div>
-        </motion.div>
-
-        {/* SECTION 3: Contact & Media */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-[2rem] p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100"
-        >
-          <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <span className="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">
-              3
-            </span>
-            Seller & Media
-          </h2>
-
-          <div className="grid sm:grid-cols-2 gap-6 mb-8">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Seller Name
-              </label>
-              <div className="relative">
-                <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  {...register("sellerName")}
-                  className={`w-full bg-gray-50 pl-11 pr-4 py-3.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-4 focus:bg-white ${
-                    errors.sellerName
-                      ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                      : "border-gray-200 focus:border-indigo-500 focus:ring-indigo-50"
-                  }`}
-                />
-              </div>
-              {errors.sellerName && (
-                <p className="mt-1 text-xs text-red-500 font-medium">
-                  {errors.sellerName.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Seller Number
-              </label>
-              <div className="relative">
-                <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="tel"
-                  placeholder="10-digit number"
-                  {...register("sellerNumber")}
-                  className={`w-full bg-gray-50 pl-11 pr-4 py-3.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-4 focus:bg-white ${
-                    errors.sellerNumber
-                      ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                      : "border-gray-200 focus:border-indigo-500 focus:ring-indigo-50"
-                  }`}
-                />
-              </div>
-              {errors.sellerNumber && (
-                <p className="mt-1 text-xs text-red-500 font-medium">
-                  {errors.sellerNumber.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Photo Upload Zone */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-semibold text-gray-700">
-                Property Photos
-              </label>
-              <span className="text-xs font-medium text-gray-500">
-                Min 2, Max 8 ({images.length}/8)
-              </span>
-            </div>
-
-            <div
-              className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-colors ${
-                imageError
-                  ? "border-red-300 bg-red-50"
-                  : "border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-indigo-300"
-              }`}
-            >
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={images.length >= 8}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-              />
-              <div className="flex flex-col items-center justify-center gap-2 pointer-events-none">
-                <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-indigo-500 mb-2">
-                  <FiUploadCloud className="w-6 h-6" />
-                </div>
-                <p className="text-sm font-semibold text-slate-700">
-                  Click or drag images to upload
-                </p>
-                <p className="text-xs text-gray-500">JPG, PNG up to 5MB</p>
-              </div>
-            </div>
-
-            {imageError && (
-              <div className="flex items-center gap-2 mt-2 text-red-500 text-xs font-medium">
-                <FiAlertCircle className="w-4 h-4 shrink-0" />
-                {imageError}
-              </div>
-            )}
-
-            {/* Image Previews */}
-            {images.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-                {images.map((img) => (
-                  <div
-                    key={img.id}
-                    className="relative group rounded-xl overflow-hidden aspect-[4/3] border border-gray-200"
-                  >
-                    <img
-                      src={img.preview}
-                      alt="preview"
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(img.id)}
-                      className="absolute top-2 right-2 w-7 h-7 bg-white/90 backdrop-blur-sm text-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
-                    >
-                      <FiX className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Form Submit Button */}
-        <div className="flex justify-end pt-4">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-[#0066FF] hover:bg-[#0055D4] text-white px-10 py-4 rounded-xl text-base font-semibold transition-all duration-300 shadow-[0_8px_20px_rgb(0,102,255,0.25)] hover:shadow-[0_8px_25px_rgb(0,102,255,0.35)] active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none flex items-center gap-2"
-          >
-            {isSubmitting ? (
-              <div className="h-5 w-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-            ) : (
-              "Post Property"
-            )}
-          </button>
+        {/* Header */}
+        <div className="mb-10 text-center sm:text-left">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#0E2248] mb-3 tracking-tight">
+            List Your Property
+          </h1>
+          <p className="text-slate-500 text-[16px] font-medium max-w-2xl">
+            Fill in the details below to publish your property. High-quality images and accurate details attract more buyers.
+          </p>
         </div>
-      </form>
+
+        <motion.form 
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          onSubmit={handleSubmit} 
+          className="space-y-8"
+        >
+          
+          {/* --- Section 1: Basic Details --- */}
+          <motion.div variants={itemVariants} className="bg-white rounded-[24px] p-6 sm:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-100">
+            <h2 className="text-xl font-bold text-[#0E2248] mb-6 flex items-center gap-2">
+              <Home className="w-5 h-5 text-[#E93946]" /> Basic Details
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Property Title */}
+              <div className="md:col-span-2">
+                <label className="block text-[14px] font-bold text-[#1D2433] mb-2">Property Title</label>
+                <input 
+                  type="text" 
+                  name="title"
+                  placeholder="e.g. Modern 3BHK Villa in VIP Road"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  className="w-full p-4 bg-[#F8FAFC] rounded-[16px] border-none text-[#1D2433] placeholder-slate-400 focus:ring-2 focus:ring-[#0E2248]/20 transition-all font-medium"
+                  required
+                />
+              </div>
+
+              {/* Status */}
+              <div>
+                <label className="block text-[14px] font-bold text-[#1D2433] mb-3">Status</label>
+                <div className="flex p-1 bg-[#F8FAFC] rounded-[16px]">
+                  {['For Sale', 'For Rent'].map(status => (
+                    <button
+                      key={status}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, status }))}
+                      className={`flex-1 py-3 text-[14px] font-bold rounded-[12px] transition-all ${
+                        formData.status === status 
+                          ? 'bg-white text-[#0E2248] shadow-sm' 
+                          : 'text-slate-500 hover:text-[#0E2248]'
+                      }`}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price */}
+              <div>
+                <label className="block text-[14px] font-bold text-[#1D2433] mb-2">Expected Price (₹)</label>
+                <div className="relative">
+                  <IndianRupee className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input 
+                    type="number" 
+                    name="price"
+                    placeholder="e.g. 8500000"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    className="w-full pl-12 pr-4 py-4 bg-[#F8FAFC] rounded-[16px] border-none text-[#1D2433] placeholder-slate-400 focus:ring-2 focus:ring-[#0E2248]/20 transition-all font-medium"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Property Type (Chips) */}
+            <div className="mt-8">
+              <label className="block text-[14px] font-bold text-[#1D2433] mb-3">Property Type</label>
+              <div className="flex flex-wrap gap-3">
+                {propertyTypes.map(type => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, type }))}
+                    className={`px-5 py-2.5 rounded-[12px] text-[14px] font-semibold transition-all border ${
+                      formData.type === type 
+                        ? 'bg-[#0E2248] text-white border-[#0E2248]' 
+                        : 'bg-white text-slate-600 border-gray-200 hover:border-[#0E2248]/30 hover:bg-slate-50'
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* --- Section 2: Property Specs --- */}
+          <motion.div variants={itemVariants} className="bg-white rounded-[24px] p-6 sm:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-100">
+            <h2 className="text-xl font-bold text-[#0E2248] mb-6 flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-[#E93946]" /> Property Configuration
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* BHK */}
+              <div>
+                <label className="block text-[14px] font-bold text-[#1D2433] mb-3">Bedrooms (BHK)</label>
+                <div className="flex flex-wrap gap-2">
+                  {bhkOptions.map(bhk => (
+                    <button
+                      key={bhk}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, bhk }))}
+                      className={`w-12 h-12 rounded-[12px] text-[15px] font-bold transition-all border flex items-center justify-center ${
+                        formData.bhk === bhk 
+                          ? 'bg-[#E93946] text-white border-[#E93946]' 
+                          : 'bg-white text-slate-600 border-gray-200 hover:border-[#E93946]/50 hover:text-[#E93946]'
+                      }`}
+                    >
+                      {bhk}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Area & Bathrooms */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[14px] font-bold text-[#1D2433] mb-2">Area (sq.ft)</label>
+                  <input 
+                    type="number" 
+                    name="area"
+                    placeholder="e.g. 1500"
+                    value={formData.area}
+                    onChange={handleInputChange}
+                    className="w-full p-4 bg-[#F8FAFC] rounded-[16px] border-none text-[#1D2433] placeholder-slate-400 focus:ring-2 focus:ring-[#0E2248]/20 transition-all font-medium"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-[14px] font-bold text-[#1D2433] mb-2">Bathrooms</label>
+                  <input 
+                    type="number" 
+                    name="bathrooms"
+                    placeholder="e.g. 2"
+                    value={formData.bathrooms}
+                    onChange={handleInputChange}
+                    className="w-full p-4 bg-[#F8FAFC] rounded-[16px] border-none text-[#1D2433] placeholder-slate-400 focus:ring-2 focus:ring-[#0E2248]/20 transition-all font-medium"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Amenities Grid */}
+            <div className="mt-8 pt-8 border-t border-gray-100">
+              <label className="block text-[14px] font-bold text-[#1D2433] mb-4">Amenities</label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {amenitiesList.map(amenity => (
+                  <button
+                    key={amenity}
+                    type="button"
+                    onClick={() => toggleAmenity(amenity)}
+                    className={`flex items-center gap-3 p-4 rounded-[16px] border transition-all text-left ${
+                      formData.amenities.includes(amenity)
+                        ? 'bg-[#0E2248]/5 border-[#0E2248]/30'
+                        : 'bg-white border-gray-100 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border ${
+                      formData.amenities.includes(amenity) ? 'bg-[#0E2248] border-[#0E2248]' : 'border-slate-300'
+                    }`}>
+                      {formData.amenities.includes(amenity) && <Check className="w-3.5 h-3.5 text-white" />}
+                    </div>
+                    <span className={`text-[14px] font-medium ${formData.amenities.includes(amenity) ? 'text-[#0E2248]' : 'text-slate-600'}`}>
+                      {amenity}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* --- Section 3: Location --- */}
+          <motion.div variants={itemVariants} className="bg-white rounded-[24px] p-6 sm:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-100">
+            <h2 className="text-xl font-bold text-[#0E2248] mb-6 flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-[#E93946]" /> Location Details
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-[14px] font-bold text-[#1D2433] mb-2">City</label>
+                <select 
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                  className="w-full p-4 bg-[#F8FAFC] rounded-[16px] border-none text-[#1D2433] focus:ring-2 focus:ring-[#0E2248]/20 transition-all font-medium appearance-none cursor-pointer"
+                >
+                  {cities.map(city => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[14px] font-bold text-[#1D2433] mb-2">Full Address</label>
+                <input 
+                  type="text" 
+                  name="address"
+                  placeholder="e.g. 123, VIP Road, Near City Mall"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  className="w-full p-4 bg-[#F8FAFC] rounded-[16px] border-none text-[#1D2433] placeholder-slate-400 focus:ring-2 focus:ring-[#0E2248]/20 transition-all font-medium"
+                  required
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* --- Section 4: Media & Description --- */}
+          <motion.div variants={itemVariants} className="bg-white rounded-[24px] p-6 sm:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-100">
+            <h2 className="text-xl font-bold text-[#0E2248] mb-6 flex items-center gap-2">
+              <ImagePlus className="w-5 h-5 text-[#E93946]" /> Media & Description
+            </h2>
+            
+            {/* Image Upload Area */}
+            <div className="mb-6">
+              <label className="block text-[14px] font-bold text-[#1D2433] mb-2">Property Images</label>
+              <div className="w-full border-2 border-dashed border-gray-200 rounded-[20px] p-10 flex flex-col items-center justify-center text-center bg-[#F8FAFC] hover:bg-slate-50 hover:border-[#0E2248]/30 transition-all cursor-pointer group">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
+                  <UploadCloud className="w-8 h-8 text-[#E93946]" />
+                </div>
+                <h4 className="text-[16px] font-bold text-[#0E2248] mb-1">Click to upload or drag and drop</h4>
+                <p className="text-[13px] text-slate-500 font-medium">SVG, PNG, JPG or GIF (max. 5MB per file)</p>
+              </div>
+            </div>
+
+            {/* Description Area */}
+            <div>
+              <label className="block text-[14px] font-bold text-[#1D2433] mb-2">Description</label>
+              <textarea 
+                name="description"
+                placeholder="Describe your property in detail..."
+                value={formData.description}
+                onChange={handleInputChange}
+                rows={5}
+                className="w-full p-4 bg-[#F8FAFC] rounded-[16px] border-none text-[#1D2433] placeholder-slate-400 focus:ring-2 focus:ring-[#0E2248]/20 transition-all font-medium resize-none"
+                required
+              />
+            </div>
+          </motion.div>
+
+          {/* Submit Button */}
+          <motion.div variants={itemVariants} className="flex justify-end pt-4">
+            <button 
+              type="submit"
+              className="bg-[#E93946] text-white px-10 py-4 rounded-[16px] font-bold text-[16px] hover:bg-[#d6333f] hover:scale-[1.02] transition-all shadow-[0_4px_14px_rgba(233,57,70,0.3)] flex items-center gap-2"
+            >
+              Publish Property
+              <CheckCircle2 className="w-5 h-5" />
+            </button>
+          </motion.div>
+
+        </motion.form>
+      </div>
     </div>
   );
-}
+};
+
+export default AddProperty;
