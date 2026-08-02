@@ -1,39 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-
-const locations = [
-  {
-    id: 1,
-    name: "Etawah",
-    properties: "1,200+",
-    image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 2,
-    name: "Jaswant Nagar",
-    properties: "850+",
-    image: "https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 3,
-    name: "Saifai",
-    properties: "420+",
-    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 4,
-    name: "Bharthana",
-    properties: "630+",
-    image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 5,
-    name: "Sirsaganj",
-    properties: "310+",
-    image: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80",
-  },
-];
+import { locations } from '../../data/dummydata';
 
 const PopularLocations = () => {
   return (

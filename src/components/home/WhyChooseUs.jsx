@@ -1,38 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import {
-  ClipboardCheck,
-  UserCheck,
-  ClipboardList,
-  ShieldCheck,
-} from "lucide-react";
-
-const features = [
-  {
-    id: 1,
-    title: "Verified Listings",
-    description: "100% Verified Properties",
-    icon: ClipboardCheck,
-  },
-  {
-    id: 2,
-    title: "Expert Guidance",
-    description: "Professional support at every step",
-    icon: UserCheck,
-  },
-  {
-    id: 3,
-    title: "Best Deals",
-    description: "Transparent pricing and best discounts",
-    icon: ClipboardList,
-  },
-  {
-    id: 4,
-    title: "End to End Support",
-    description: "We are with you always",
-    icon: ShieldCheck,
-  },
-];
+import { features } from "../../data/dummydata";
 
 const WhyChooseUs = () => {
   return (

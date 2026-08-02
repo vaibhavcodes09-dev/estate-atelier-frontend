@@ -21,7 +21,7 @@ export default function PropertyCard({ property, index = 0 }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink-900/60 via-transparent to-transparent" />
         <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink-900 backdrop-blur">
-          {property.tag}
+          {property.status}
         </span>
         <button
           aria-label="Save property"
@@ -42,7 +42,7 @@ export default function PropertyCard({ property, index = 0 }) {
         </div>
 
         <div className="flex items-center gap-5 border-y border-ink-100 py-3 text-sm text-ink-600">
-          <span className="flex items-center gap-1.5"><strong className="text-ink-900">{property.beds}</strong> Beds</span>
+          <span className="flex items-center gap-1.5"><strong className="text-ink-900">{property.bhk}</strong> Beds</span>
           <span className="flex items-center gap-1.5"><strong className="text-ink-900">{property.baths}</strong> Baths</span>
           <span className="flex items-center gap-1.5"><strong className="text-ink-900">{property.area}</strong></span>
         </div>

@@ -15,47 +15,7 @@ import {
   FiLogIn,
   FiUserPlus,
 } from "react-icons/fi";
-
-const navCategories = [
-  {
-    title: "For Buyer",
-    items: ["Buy a Home", "Buy Commercial", "Buy a Plot", "New Projects"],
-  },
-  {
-    title: "For Tenants",
-    items: [
-      "Rent a Home",
-      "Rent Commercial",
-      "Co-living Spaces",
-      "Student Housing",
-    ],
-  },
-  {
-    title: "For Dealers",
-    items: [
-      "Partner Dashboard",
-      "List Properties",
-      "Market Insights",
-      "Pro Services",
-    ],
-  },
-];
-
-// Updated menu items with distinct paths
-const profileMenuItems = [
-  { icon: FiLogIn, label: "Login", path: "/login" },
-  { icon: FiUserPlus, label: "Sign Up", path: "/signup", divider: true },
-  { icon: FiSearch, label: "Recently Searched", path: "#recently-searched" },
-  { icon: FiEye, label: "Recently Viewed", path: "#recently-viewed" },
-  { icon: FiHeart, label: "Shortlisted", path: "#shortlisted" },
-  {
-    icon: FiMessageCircle,
-    label: "Contacted",
-    path: "#contacted",
-    divider: true,
-  },
-  { icon: FiPlusSquare, label: "Post Property", path: "/add-property" },
-];
+import { navCategories, profileMenuItems } from "../../data/dummydata";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);

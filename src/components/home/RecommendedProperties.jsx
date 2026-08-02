@@ -1,4 +1,4 @@
-
+import { propertiesData } from "../../data/dummydata";
 import PropertyCard from "../common/PropertyCard";
 
 import React from 'react';
@@ -7,55 +7,6 @@ import { FiHeart } from 'react-icons/fi';
 import { ChevronRight } from 'lucide-react';
 import { Link } from "react-router-dom";
 
-
-// --- RecommendedProperties Section ---
-const dummyProperties = [
-  {
-    id: 1,
-    title: "Modern 3BHK Villa",
-    price: "₹ 1.85 Cr",
-    bhk: "3",
-    sqft: "2,100",
-    location: "Koramangala, Bengaluru",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 2,
-    title: "Luxury Apartment",
-    price: "₹ 65 Lacs",
-    bhk: "3",
-    sqft: "1,550",
-    location: "Friends Colony, Etawah",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 3,
-    title: "Independent House",
-    price: "₹ 85 Lacs",
-    bhk: "3",
-    sqft: "1,800",
-    location: "Bharthana, Etawah",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 4,
-    title: "Premium Duplex",
-    price: "₹ 1.50 Cr",
-    bhk: "5",
-    sqft: "3,200",
-    location: "Jaswant Nagar, Etawah",
-    image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 5,
-    title: "Cozy Builder Floor",
-    price: "₹ 45 Lacs",
-    bhk: "2",
-    sqft: "1,100",
-    location: "Saifai, Etawah",
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  },
-];
 
 const RecommendedProperties = () => {
   return (
@@ -94,7 +45,7 @@ const RecommendedProperties = () => {
 
         {/* Grid Display (Max 4 Items, No Sliding) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {dummyProperties.slice(0, 4).map((property) => (
+          {propertiesData.slice(0, 4).map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
         </div>

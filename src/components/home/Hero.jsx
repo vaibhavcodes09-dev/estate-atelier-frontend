@@ -5,6 +5,7 @@ import { FiSearch, FiMapPin, FiChevronDown, FiTarget } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 import heroImg from "../../assets/hero.avif";
+import { searchSuggestions } from "../../data/dummydata";
 
 const RealEstateHero = () => {
   const [activeTab, setActiveTab] = useState("Buy");
@@ -39,14 +40,6 @@ const RealEstateHero = () => {
       },
     },
   };
-
-  const searchSuggestions = [
-    "Search property in Vijay Nagar",
-    "Search property in Friends Colony",
-    "Search property in Bharthana",
-    "Search property in Jaswant Nagar",
-    "Search property in Saifai",
-  ];
 
   return (
     <section className="relative pt-14 min-h-screen overflow-hidden">

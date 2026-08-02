@@ -1,34 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Quote } from 'lucide-react';
-
-// --- Dummy Data ---
-const testimonials = [
-  {
-    id: 1,
-    name: "Rahul Sharma",
-    location: "Jaswant Nagar",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
-    rating: 5,
-    review: "The platform made finding a home in Jaswant Nagar incredibly easy. The 100% verified listings gave me peace of mind, and the end-to-end support was exactly what I needed as a first-time buyer."
-  },
-  {
-    id: 2,
-    name: "Priya Singh",
-    location: "Etawah",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
-    rating: 5,
-    review: "I was looking for a premium property and the expert guidance I received was unmatched. They helped negotiate a fantastic deal. Highly recommend their transparent and professional services!"
-  },
-  {
-    id: 3,
-    name: "Amit Yadav",
-    location: "Saifai",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-    rating: 5,
-    review: "Selling my builder floor in Saifai was a breeze. The team handled everything from listing to finalizing the paperwork. Their transparent pricing model is a breath of fresh air in real estate."
-  }
-];
+import { testimonials } from '../../data/dummydata';
 
 const Testimonials = () => {
   return (

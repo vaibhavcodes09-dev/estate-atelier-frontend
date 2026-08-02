@@ -1,111 +1,14 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, SlidersHorizontal, MapPin, Heart, X } from "lucide-react";
+import { propertiesData } from "../data/dummydata"
+import { Link } from "react-router-dom";
 
-// --- Mock Data ---
-const allPropertiesData = [
-  {
-    id: 1,
-    title: "Modern 3BHK Villa",
-    priceValue: 18500000,
-    price: "₹ 1.85 Cr",
-    bhk: "3",
-    type: "Villa",
-    sqft: "2,100",
-    location: "Jaswant Nagar",
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 2,
-    title: "Luxury Apartment",
-    priceValue: 6500000,
-    price: "₹ 65 Lacs",
-    bhk: "3",
-    type: "Apartment",
-    sqft: "1,550",
-    location: "Etawah",
-    image:
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 3,
-    title: "Independent House",
-    priceValue: 8500000,
-    price: "₹ 85 Lacs",
-    bhk: "3",
-    type: "House",
-    sqft: "1,800",
-    location: "Bharthana",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 4,
-    title: "Premium Duplex",
-    priceValue: 15000000,
-    price: "₹ 1.50 Cr",
-    bhk: "5",
-    type: "Duplex",
-    sqft: "3,200",
-    location: "Saifai",
-    image:
-      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 5,
-    title: "Cozy Builder Floor",
-    priceValue: 4500000,
-    price: "₹ 45 Lacs",
-    bhk: "2",
-    type: "Builder Floor",
-    sqft: "1,100",
-    location: "Sirsaganj",
-    image:
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 6,
-    title: "Highway Facing Villa",
-    priceValue: 12000000,
-    price: "₹ 1.20 Cr",
-    bhk: "4",
-    type: "Villa",
-    sqft: "2,400",
-    location: "Etawah",
-    image:
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 7,
-    title: "Compact 2BHK Flat",
-    priceValue: 3500000,
-    price: "₹ 35 Lacs",
-    bhk: "2",
-    type: "Apartment",
-    sqft: "900",
-    location: "Jaswant Nagar",
-    image:
-      "https://images.unsplash.com/photo-1502672260266-1c1de2d93688?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 8,
-    title: "Spacious Farmhouse",
-    priceValue: 25000000,
-    price: "₹ 2.50 Cr",
-    bhk: "5+",
-    type: "House",
-    sqft: "5,000",
-    location: "Saifai",
-    image:
-      "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80",
-  },
-];
 
 // Extract unique filter options
-const locations = [...new Set(allPropertiesData.map((p) => p.location))];
-const propertyTypes = [...new Set(allPropertiesData.map((p) => p.type))];
-const bhkOptions = [...new Set(allPropertiesData.map((p) => p.bhk))].sort();
+const locations = [...new Set(propertiesData.map((p) => p.location))];
+const propertyTypes = [...new Set(propertiesData.map((p) => p.type))];
+const bhkOptions = [...new Set(propertiesData.map((p) => p.bhk))].sort();
 
 const Properties = () => {
   // State for search and filters
@@ -118,7 +21,7 @@ const Properties = () => {
 
   // High-performance filtering using useMemo
   const filteredProperties = useMemo(() => {
-    return allPropertiesData.filter((property) => {
+    return propertiesData.filter((property) => {
       const matchSearch =
         property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         property.location.toLowerCase().includes(searchTerm.toLowerCase());
@@ -399,12 +302,12 @@ const Properties = () => {
                         <span className="text-[20px] font-bold text-[#0E2248]">
                           {property.price}
                         </span>
-                        <a
-                          href={`/properties/${property.id}`}
+                        <Link
+                          to={`/properties/${property.id}`}
                           className="text-[14px] font-bold text-[#E93946] hover:underline"
                         >
                           View Details
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </motion.div>
