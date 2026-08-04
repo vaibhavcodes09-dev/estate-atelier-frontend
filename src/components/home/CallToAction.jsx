@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, PhoneCall } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const CallToAction = () => {
   return (
@@ -29,21 +30,21 @@ const CallToAction = () => {
 
           {/* Action Buttons */}
           <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <a 
-              href="/all-properties"
+            <Link 
+              to="/properties"
               className="flex items-center justify-center gap-2 bg-[#E93946] text-white px-8 py-4 rounded-[16px] font-bold text-[15px] hover:bg-[#d6333f] hover:scale-105 transition-all duration-300 shadow-[0_4px_14px_rgba(233,57,70,0.4)] group"
             >
               Explore Properties
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-            </a>
+            </Link>
             
-            <a 
-              href="/contact"
+            <Link 
+              to="/contact"
               className="flex items-center justify-center gap-2 bg-white/10 text-white border border-white/20 px-8 py-4 rounded-[16px] font-bold text-[15px] hover:bg-white/20 transition-all duration-300 backdrop-blur-md"
             >
               <PhoneCall className="w-5 h-5" />
               Contact an Agent
-            </a>
+            </Link>
           </div>
         </motion.div>
 
