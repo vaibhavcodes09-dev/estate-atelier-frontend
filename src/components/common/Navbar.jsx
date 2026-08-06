@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp} from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   FiMapPin,
   FiUser,
@@ -117,13 +118,13 @@ const Navbar = () => {
                       className="absolute top-[70px] left-1/2 -translate-x-1/2 w-56 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 py-3 overflow-hidden"
                     >
                       {category.items.map((item, itemIdx) => (
-                        <a
+                        <Link
                           key={itemIdx}
-                          href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                          to={item.path}
                           className="block px-5 py-2.5 text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
                         >
-                          {item}
-                        </a>
+                          {item.name}
+                        </Link>
                       ))}
                     </motion.div>
                   )}

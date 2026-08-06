@@ -1,24 +1,29 @@
 export const navCategories = [
   {
     title: "For Buyer",
-    items: ["Buy a Home", "Buy Commercial", "Buy a Plot", "New Projects"],
+    items: [
+      { name: "Buy a Home", path: "/buy/home" },
+      { name: "Buy Commercial", path: "/buy/commercial" },
+      { name: "Buy a Plot", path: "/buy/plot" },
+      { name: "New Projects", path: "/buy/new-projects" },
+    ],
   },
   {
     title: "For Tenants",
     items: [
-      "Rent a Home",
-      "Rent Commercial",
-      "Co-living Spaces",
-      "Student Housing",
+      { name: "Rent a Home", path: "/rent/home" },
+      { name: "Rent Commercial", path: "/rent/commercial" },
+      { name: "Co-living Spaces", path: "/rent/co-living" },
+      { name: "Student Housing", path: "/rent/student-housing" },
     ],
   },
   {
     title: "For Dealers",
     items: [
-      "Partner Dashboard",
-      "List Properties",
-      "Market Insights",
-      "Pro Services",
+      { name: "Partner Dashboard", path: "/dealer/dashboard" },
+      { name: "List Properties", path: "/dealer/list-properties" },
+      { name: "Market Insights", path: "/dealer/market-insights" },
+      { name: "Pro Services", path: "/dealer/pro-services" },
     ],
   },
 ];
