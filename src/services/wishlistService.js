@@ -1,25 +1,41 @@
-// wishlistService.js — placeholder service for user wishlist management.
-// All functions are empty stubs with TODO comments.
-// Will be wired to Supabase data layer in a future implementation.
+import { DB_KEYS, getItem, setItem, initDatabase } from '../data/mockDatabase';
+import { getPropertyById } from './propertyService';
 
-export async function getWishlist(userId) {
-  // TODO: fetch wishlist items for the given user from Supabase
-  console.log('getWishlist', userId);
+initDatabase();
+
+export async function getWishlistIds() {
+  return getItem(DB_KEYS.WISHLIST, []);
+}
+
+export async function getWishlistProperties() {
+  const ids = getItem(DB_KEYS.WISHLIST, []);
+  const properties = getItem(DB_KEYS.PROPERTIES, []);
+  return properties.filter((p) => ids.includes(p.id));
+}
+
+export async function toggleWishlist(propertyId) {
+  const ids = getItem(DB_KEYS.WISHLIST, []);
+  const numericId = Number(propertyId);
+  let updatedIds;
+  let isAdded = false;
+
+  if (ids.includes(numericId)) {
+    updatedIds = ids.filter((id) => id !== numericId);
+  } else {
+    updatedIds = [numericId, ...ids];
+    isAdded = true;
+  }
+
+  setItem(DB_KEYS.WISHLIST, updatedIds);
+  return { wishlist: updatedIds, isAdded };
+}
+
+export async function isWishlisted(propertyId) {
+  const ids = getItem(DB_KEYS.WISHLIST, []);
+  return ids.includes(Number(propertyId));
+}
+
+export async function clearWishlist() {
+  setItem(DB_KEYS.WISHLIST, []);
   return [];
-}
-
-export async function addToWishlist(userId, propertyId) {
-  // TODO: insert a wishlist entry into Supabase
-  console.log('addToWishlist', userId, propertyId);
-}
-
-export async function removeFromWishlist(userId, propertyId) {
-  // TODO: delete a wishlist entry from Supabase
-  console.log('removeFromWishlist', userId, propertyId);
-}
-
-export async function isWishlisted(userId, propertyId) {
-  // TODO: check if a property is in the user's wishlist
-  console.log('isWishlisted', userId, propertyId);
-  return false;
 }

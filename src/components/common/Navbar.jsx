@@ -1,112 +1,134 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp} from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 import {
   FiMapPin,
   FiUser,
   FiMenu,
   FiX,
   FiChevronDown,
-  FiSearch,
-  FiEye,
   FiHeart,
-  FiMessageCircle,
   FiPlusSquare,
   FiLogIn,
   FiUserPlus,
-} from "react-icons/fi";
-import { navCategories, profileMenuItems } from "../../data/dummydata";
+  FiGrid,
+  FiLogOut,
+} from 'react-icons/fi';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import squareupLogo from '../../assets/squareup-logo.jpg';
+import { navCategories } from '../../data/dummydata';
+import { useWishlist } from '@/context/WishlistContext';
+import { useAuth } from '@/context/AuthContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [openIndex, setOpenIndex] = useState(null); // For mobile dropdowns
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const location = useLocation();
+  const { wishlistCount } = useWishlist();
+  const { currentUser, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close menus on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setProfileOpen(false);
+    setActiveDropdown(null);
+  }, [location.pathname]);
+
   const dropdownVariants = {
-    hidden: { opacity: 0, y: 15, scale: 0.95, pointerEvents: "none" },
+    hidden: { opacity: 0, y: 10, scale: 0.96, pointerEvents: 'none' },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      pointerEvents: "auto",
-      transition: { duration: 0.4, type: "spring", bounce: 0.25 },
+      pointerEvents: 'auto',
+      transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
     },
     exit: {
       opacity: 0,
-      y: 10,
-      scale: 0.95,
-      pointerEvents: "none",
-      transition: { duration: 0.3, ease: "easeIn" },
+      y: 6,
+      scale: 0.96,
+      pointerEvents: 'none',
+      transition: { duration: 0.15 },
     },
   };
 
-  const textColorClass = isScrolled ? "text-slate-900" : "text-slate-900";
-  const bgColorClass = isScrolled
-    ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100"
-    : "bg-transparent";
+  const headerClass = isScrolled
+    ? 'bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-b border-slate-200/60 py-3'
+    : 'bg-white/80 backdrop-blur-lg border-b border-slate-100 py-4.5';
 
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${bgColorClass}`}
-    >
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${headerClass}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo & Location */}
-          <div className="flex items-center gap-6">
-            <a
-              href="/"
-              className={`flex flex-col justify-center ${textColorClass}`}
-            >
-              <span className="font-bold text-2xl tracking-tight leading-none">
-                squareup<span className="text-indigo-500">.</span>
-              </span>
-              <span className="text-[10px] uppercase tracking-[0.2em] opacity-80 mt-1">
-                Properties
-              </span>
-            </a>
-
-            <div
-              className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-colors duration-300 ${isScrolled ? "border-gray-200 bg-gray-50" : "border-white/20 bg-white/10"}`}
-            >
-              <FiMapPin
-                className={`w-4 h-4 text-indigo-600`}
+        <div className="flex items-center justify-between gap-8 h-14">
+          
+          {/* Group 1: Brand & Location (Spacious & Clean) */}
+          <div className="flex items-center gap-6 shrink-0">
+            <Link to="/" className="flex items-center gap-3.5 group">
+              <img
+                src={squareupLogo}
+                alt="SquareUp Logo"
+                className="h-10 w-auto object-contain rounded-xl shadow-sm transition-transform duration-300 group-hover:scale-105"
               />
-              <span className={`text-sm font-medium ${textColorClass}`}>
-                Etawah
-              </span>
+              <div className="flex flex-col justify-center">
+                <span className="font-extrabold text-2xl tracking-tight leading-none text-slate-950">
+                  SquareUp<span className="text-indigo-600">.</span>
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-slate-400 mt-1">
+                  Real Estate
+                </span>
+              </div>
+            </Link>
+
+            <div className="hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200/70 bg-slate-50/80 text-xs font-semibold text-slate-600">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <FiMapPin className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+              <span>Etawah & NCR</span>
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+          {/* Group 2: Center Navigation Options (Refined typography & spacing) */}
+          <nav className="hidden lg:flex items-center gap-9">
+            <Link
+              to="/properties"
+              className={`text-sm font-semibold transition-colors duration-200 ${
+                location.pathname === '/properties'
+                  ? 'text-indigo-600 font-bold'
+                  : 'text-slate-600 hover:text-slate-950'
+              }`}
+            >
+              All Properties
+            </Link>
+
             {navCategories.map((category, idx) => (
               <div
                 key={idx}
-                className="relative group h-20 flex items-center"
+                className="relative group py-2 flex items-center"
                 onMouseEnter={() => setActiveDropdown(idx)}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <button
-                  className={`flex items-center gap-1 text-[15px] font-medium transition-colors ${textColorClass}`}
+                  className="flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-950 transition-colors duration-200"
+                  aria-expanded={activeDropdown === idx}
                 >
-                  {category.title}
+                  <span>{category.title}</span>
                   <FiChevronDown
-                    className={`w-4 h-4 transition-transform duration-300 ${activeDropdown === idx ? "rotate-180" : ""}`}
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-250 ${
+                      activeDropdown === idx ? 'rotate-180 text-indigo-600' : ''
+                    }`}
                   />
                 </button>
-
-                <div className="absolute bottom-6 left-0 w-full h-[2px] bg-indigo-500 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
 
                 <AnimatePresence>
                   {activeDropdown === idx && (
@@ -115,15 +137,20 @@ const Navbar = () => {
                       initial="hidden"
                       animate="visible"
                       exit="exit"
-                      className="absolute top-[70px] left-1/2 -translate-x-1/2 w-56 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 py-3 overflow-hidden"
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-2xl shadow-[0_16px_40px_rgb(0,0,0,0.08)] border border-slate-100 py-3.5 overflow-hidden z-50"
                     >
+                      <div className="px-4 pb-2 mb-2 border-b border-slate-100">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                          {category.title}
+                        </span>
+                      </div>
                       {category.items.map((item, itemIdx) => (
                         <Link
                           key={itemIdx}
-                          to={item.path}
-                          className="block px-5 py-2.5 text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
+                          to={item.path || '/properties'}
+                          className="flex items-center justify-between px-5 py-2.5 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50/60 transition-colors"
                         >
-                          {item.name}
+                          <span>{item.name}</span>
                         </Link>
                       ))}
                     </motion.div>
@@ -131,32 +158,51 @@ const Navbar = () => {
                 </AnimatePresence>
               </div>
             ))}
+
+            <Link
+              to="/contact"
+              className={`text-sm font-semibold transition-colors duration-200 ${
+                location.pathname === '/contact'
+                  ? 'text-indigo-600 font-bold'
+                  : 'text-slate-600 hover:text-slate-950'
+              }`}
+            >
+              Contact Us
+            </Link>
           </nav>
 
-          {/* Right Actions */}
-          <div className="hidden lg:flex items-center gap-5">
-            {/* Add Property Link disguised as a button */}
-            <a
-              href="/add-property"
-              className="relative overflow-hidden group bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2"
+          {/* Group 3: Right Actions (Quiet secondary actions + Standout primary CTA) */}
+          <div className="hidden lg:flex items-center gap-3.5 shrink-0">
+            
+            {/* Secondary Action 1: Wishlist (Quiet icon button with indicator) */}
+            <Link
+              to="/wishlist"
+              className="relative p-2.5 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100/80 transition-all duration-200"
+              title="View Wishlist"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                <FiPlusSquare className="w-4 h-4" />
-                Post Property
-              </span>
-              <div className="absolute inset-0 h-full w-full bg-white/20 scale-x-0 group-hover:scale-x-100 transform origin-left transition-transform duration-500 ease-out" />
-            </a>
+              <FiHeart className="w-5 h-5" />
+              {wishlistCount > 0 && (
+                <span className="absolute top-1 right-1 w-4 h-4 bg-rose-500 text-white text-[10px] font-extrabold rounded-full flex items-center justify-center shadow-sm">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
 
-            {/* Profile Dropdown */}
+            {/* Secondary Action 2: User Profile (Quiet icon avatar dropdown) */}
             <div
               className="relative"
               onMouseEnter={() => setProfileOpen(true)}
               onMouseLeave={() => setProfileOpen(false)}
             >
               <button
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border ${isScrolled ? "border-gray-200 hover:bg-gray-50 text-gray-700" : "border-white/30 hover:bg-white/20 text-white"}`}
+                className="w-10 h-10 rounded-full border border-slate-200 overflow-hidden flex items-center justify-center bg-slate-50 hover:border-slate-400 transition-all"
+                aria-label="User Account"
               >
-                <FiUser className="w-5 h-5" />
+                {currentUser?.avatar ? (
+                  <img src={currentUser.avatar} alt="User Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <FiUser className="w-4.5 h-4.5 text-slate-600" />
+                )}
               </button>
 
               <AnimatePresence>
@@ -166,44 +212,96 @@ const Navbar = () => {
                     initial="hidden"
                     animate="visible"
                     exit="exit"
-                    className="absolute top-[45px] right-0 w-64 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 py-2 overflow-hidden"
+                    className="absolute top-full right-0 mt-2 w-64 bg-white rounded-2xl shadow-[0_16px_40px_rgb(0,0,0,0.08)] border border-slate-100 py-3 overflow-hidden z-50"
                   >
-                    {profileMenuItems.map((item, idx) => (
-                      <React.Fragment key={idx}>
-                        <a
-                          href={item.path}
-                          className={`flex items-center gap-3 px-5 py-3 text-sm transition-colors ${
-                            ["Login", "Sign Up"].includes(item.label)
-                              ? "font-semibold text-indigo-600 hover:bg-indigo-50"
-                              : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
-                          }`}
+                    {currentUser ? (
+                      <>
+                        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50">
+                          <p className="text-xs font-extrabold text-slate-900 truncate">
+                            {currentUser.firstName} {currentUser.lastName}
+                          </p>
+                          <p className="text-[11px] font-medium text-slate-400 truncate">{currentUser.email}</p>
+                        </div>
+                        <Link
+                          to="/dashboard"
+                          className="flex items-center gap-3 px-5 py-2.5 text-xs font-semibold text-slate-700 hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
                         >
-                          <item.icon className="w-4 h-4" />
-                          {item.label}
-                        </a>
-                        {item.divider && (
-                          <div className="h-px bg-gray-100 my-1 mx-4" />
-                        )}
-                      </React.Fragment>
-                    ))}
+                          <FiGrid className="w-4 h-4 text-slate-400" />
+                          Partner Dashboard
+                        </Link>
+                        <Link
+                          to="/profile"
+                          className="flex items-center gap-3 px-5 py-2.5 text-xs font-semibold text-slate-700 hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
+                        >
+                          <FiUser className="w-4 h-4 text-slate-400" />
+                          Account Profile
+                        </Link>
+                        <div className="h-px bg-slate-100 my-1 mx-4" />
+                        <button
+                          onClick={logout}
+                          className="w-full flex items-center gap-3 px-5 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left"
+                        >
+                          <FiLogOut className="w-4 h-4 text-rose-500" />
+                          Sign Out
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          to="/login"
+                          className="flex items-center gap-3 px-5 py-3 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition-colors"
+                        >
+                          <FiLogIn className="w-4 h-4" />
+                          Sign In
+                        </Link>
+                        <Link
+                          to="/signup"
+                          className="flex items-center gap-3 px-5 py-3 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition-colors"
+                        >
+                          <FiUserPlus className="w-4 h-4" />
+                          Create Account
+                        </Link>
+                      </>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Separator */}
+            <div className="h-6 w-px bg-slate-200/80 mx-1" />
+
+            {/* PRIMARY ACTION: Standout High-Contrast Pill CTA */}
+            <Link
+              to="/add-property"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-full text-xs font-extrabold tracking-wide transition-all shadow-[0_4px_14px_rgba(79,70,229,0.35)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.45)] flex items-center gap-2 active:scale-95 shrink-0"
+            >
+              <FiPlusSquare className="w-4 h-4 stroke-[2.2]" />
+              Post Property
+            </Link>
+
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            className={`lg:hidden p-2 transition-colors ${textColorClass}`}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <FiX className="w-6 h-6" />
-            ) : (
-              <FiMenu className="w-6 h-6" />
-            )}
-          </button>
+          {/* Mobile Menu Controls */}
+          <div className="flex items-center gap-3 lg:hidden shrink-0">
+            <Link to="/wishlist" className="relative p-2 text-slate-700">
+              <FiHeart className="w-5 h-5" />
+              {wishlistCount > 0 && (
+                <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 text-white text-[10px] font-extrabold rounded-full flex items-center justify-center">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            <button
+              className="p-2 text-slate-900 rounded-xl hover:bg-slate-100 transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+            </button>
+          </div>
+
         </div>
       </div>
 
@@ -211,85 +309,107 @@ const Navbar = () => {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ y: -40, opacity: 0 }}
+            initial={{ y: -15, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{
-              duration: 0.6,
-              ease: "easeOut",
-            }}
-            className="lg:hidden absolute top-20 left-0 w-full bg-white shadow-xl overflow-y-auto border-t border-gray-100"
-            style={{ height: "calc(100vh - 80px)" }}
+            exit={{ y: -15, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="lg:hidden absolute top-full left-0 w-full bg-white shadow-2xl border-t border-slate-100 overflow-y-auto"
+            style={{ height: 'calc(100vh - 72px)' }}
           >
             <div className="p-6 flex flex-col gap-6">
-              <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
-                <FiMapPin className="w-5 h-5 text-indigo-600" />
-                <span className="font-medium text-gray-800">Etawah</span>
-              </div>
+              
+              <div className="flex flex-col gap-1">
+                <Link
+                  to="/properties"
+                  className="px-4 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50 rounded-xl"
+                >
+                  All Properties
+                </Link>
 
-              <div className="flex flex-col gap-2">
                 {navCategories.map((category, idx) => (
                   <div key={idx} className="flex flex-col">
-                    {/* Category Header */}
                     <button
-                      onClick={() =>
-                        setOpenIndex(openIndex === idx ? null : idx)
-                      }
-                      className="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-gray-400 uppercase tracking-wider"
+                      onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
+                      className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider"
                     >
                       <span>{category.title}</span>
-                      {openIndex === idx ? (
-                        <ChevronUp size={18} />
-                      ) : (
-                        <ChevronDown size={18} />
-                      )}
+                      {openIndex === idx ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </button>
 
-                    {/* Dropdown Items */}
-                    <div
-                      className={`overflow-hidden transition-all duration-300 ${
-                        openIndex === idx ? "max-h-60" : "max-h-0"
-                      }`}
-                    >
+                    <div className={`overflow-hidden transition-all ${openIndex === idx ? 'max-h-60' : 'max-h-0'}`}>
                       {category.items.map((item, itemIdx) => (
-                        <a
+                        <Link
                           key={itemIdx}
-                          href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                          className="block px-4 py-3 text-base font-medium text-gray-800 hover:text-indigo-600 hover:bg-gray-50 rounded-xl transition-colors"
+                          to={item.path || '/properties'}
+                          className="block px-6 py-2.5 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-xl"
                         >
-                          {item}
-                        </a>
+                          {item.name}
+                        </Link>
                       ))}
                     </div>
                   </div>
                 ))}
+
+                <Link
+                  to="/contact"
+                  className="px-4 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50 rounded-xl"
+                >
+                  Contact Us
+                </Link>
               </div>
 
-              <div className="h-px bg-gray-100 my-2" />
+              <div className="h-px bg-slate-100 my-1" />
 
-              <div className="flex flex-col gap-1">
-                {profileMenuItems.map((item, idx) => (
-                  <a
-                    key={idx}
-                    href={item.path}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                      ["Login", "Sign Up"].includes(item.label)
-                        ? "font-bold text-indigo-600 bg-indigo-50/50"
-                        : "text-base font-medium text-gray-700 hover:bg-gray-50"
-                    }`}
-                  >
-                    <item.icon className="w-5 h-5" />
-                    {item.label}
-                  </a>
-                ))}
+              <div className="flex flex-col gap-2">
+                {currentUser ? (
+                  <>
+                    <Link
+                      to="/dashboard"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-900 bg-slate-50"
+                    >
+                      <FiGrid className="w-4.5 h-4.5 text-indigo-600" />
+                      Partner Dashboard
+                    </Link>
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-700 hover:bg-slate-50"
+                    >
+                      <FiUser className="w-4.5 h-4.5 text-slate-500" />
+                      Account Profile
+                    </Link>
+                    <button
+                      onClick={logout}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-rose-600 hover:bg-rose-50 text-left"
+                    >
+                      <FiLogOut className="w-4.5 h-4.5" />
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link
+                      to="/login"
+                      className="flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-xs text-indigo-600 bg-indigo-50"
+                    >
+                      <FiLogIn className="w-4 h-4" /> Sign In
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-xs text-white bg-indigo-600"
+                    >
+                      <FiUserPlus className="w-4 h-4" /> Sign Up
+                    </Link>
+                  </div>
+                )}
               </div>
 
-              <a
-                href="/add-property"
-                className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-xl text-base font-semibold transition-colors flex items-center justify-center gap-2 shadow-md"
+              <Link
+                to="/add-property"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl text-sm font-extrabold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30"
               >
                 <FiPlusSquare className="w-5 h-5" />
                 Post Property
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}

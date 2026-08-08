@@ -1,12 +1,20 @@
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from '@/routes/AppRoutes';
+import { ToastProvider } from '@/context/ToastContext';
+import { WishlistProvider } from '@/context/WishlistContext';
+import { AuthProvider } from '@/context/AuthContext';
 
-// App — root component. Wraps the route tree in BrowserRouter
-// so client-side navigation works across all pages.
+// App — root component wrapped in global providers
 export default function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <ToastProvider>
+        <AuthProvider>
+          <WishlistProvider>
+            <AppRoutes />
+          </WishlistProvider>
+        </AuthProvider>
+      </ToastProvider>
     </BrowserRouter>
   );
 }

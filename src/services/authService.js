@@ -1,104 +1,117 @@
+import { DB_KEYS, getItem, setItem, defaultUser, initDatabase } from '../data/mockDatabase';
 import { supabase } from './supabaseClient';
 
-// authService.js — authentication service backed by Supabase Auth.
-// When Supabase env vars are not configured, functions resolve with
-// mock data so the UI remains functional during frontend development.
+initDatabase();
 
-const MOCK_DELAY = 800;
+const MOCK_DELAY = 400;
 
-function delay(ms) {
+function delay(ms = MOCK_DELAY) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
  * Login with email + password.
- * @returns {Promise<{ user: object }>}
  */
 export async function login(email, password) {
-  if (!supabase) {
-    await delay(MOCK_DELAY);
-    return { user: { id: 'mock-user', email } };
+  if (supabase) {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw new Error(error.message);
+    return data;
   }
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw new Error(error.message);
-  return data;
+
+  await delay();
+  const existingUser = getItem(DB_KEYS.USER, defaultUser);
+  const user = {
+    ...existingUser,
+    email: email || existingUser.email,
+  };
+  setItem(DB_KEYS.USER, user);
+  return { user };
 }
 
 /**
  * Sign up with email, password, and name.
- * @returns {Promise<{ user: object }>}
  */
 export async function signup(email, password, name) {
-  if (!supabase) {
-    await delay(MOCK_DELAY);
-    return { user: { id: 'mock-user', email, userMetadata: { name } } };
+  if (supabase) {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name } },
+    });
+    if (error) throw new Error(error.message);
+    return data;
   }
-  const { data, error } = await supabase.auth.signUp({
+
+  await delay();
+  const nameParts = (name || 'New User').split(' ');
+  const newUser = {
+    ...defaultUser,
+    id: `usr_${Date.now()}`,
+    firstName: nameParts[0] || 'User',
+    lastName: nameParts.slice(1).join(' ') || '',
     email,
-    password,
-    options: { data: { name } },
-  });
-  if (error) throw new Error(error.message);
-  return data;
+  };
+  setItem(DB_KEYS.USER, newUser);
+  return { user: newUser };
 }
 
 /**
- * Send a password reset email.
- * @returns {Promise<void>}
+ * Send password reset email.
  */
 export async function forgotPassword(email) {
-  if (!supabase) {
-    await delay(MOCK_DELAY);
+  if (supabase) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) throw new Error(error.message);
     return;
   }
-  const { error } = await supabase.auth.resetPasswordForEmail(email);
-  if (error) throw new Error(error.message);
+
+  await delay();
+  if (!email || !email.includes('@')) {
+    throw new Error('Please enter a valid email address.');
+  }
+  return true;
 }
 
 /**
- * Sign out the current session.
- * @returns {Promise<void>}
+ * Sign out current user session.
  */
 export async function logout() {
-  if (!supabase) return;
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(error.message);
+  if (supabase) {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error(error.message);
+  }
+  await delay(100);
+  return true;
 }
 
 /**
- * Get the currently authenticated user.
- * @returns {Promise<object|null>}
+ * Get current authenticated user profile.
  */
 export async function getCurrentUser() {
-  if (!supabase) return null;
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
+  if (supabase) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) return user;
+  }
+  return getItem(DB_KEYS.USER, defaultUser);
 }
 
 /**
- * Update the current user's profile metadata.
- * @param {object} data — fields to merge into user_metadata
- * @returns {Promise<object>}
+ * Update current user profile fields.
  */
 export async function updateProfile(data) {
-  if (!supabase) {
-    await delay(MOCK_DELAY);
-    return { userMetadata: data };
-  }
-  const { data: result, error } = await supabase.auth.updateUser({ data });
-  if (error) throw new Error(error.message);
-  return result;
-}
+  await delay();
+  const current = getItem(DB_KEYS.USER, defaultUser);
+  const updatedUser = {
+    ...current,
+    ...data,
+  };
+  setItem(DB_KEYS.USER, updatedUser);
 
-/**
- * Subscribe to auth state changes.
- * @param {(user: object|null) => void} callback
- * @returns {() => void} unsubscribe function
- */
-export function onAuthChange(callback) {
-  if (!supabase) return () => {};
-  const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-    callback(session?.user ?? null);
-  });
-  return () => subscription.unsubscribe();
+  if (supabase) {
+    const { data: result, error } = await supabase.auth.updateUser({ data });
+    if (error) console.error('Supabase profile update warning:', error);
+  }
+
+  return updatedUser;
 }
