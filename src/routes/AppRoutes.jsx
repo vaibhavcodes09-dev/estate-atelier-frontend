@@ -4,6 +4,7 @@ import DashboardLayout from '@/layouts/DashboardLayout';
 import Home from '@/pages/Home';
 import Properties from '@/pages/Properties';
 import PropertyDetails from '@/pages/PropertyDetails';
+import Tools from '@/pages/Tools';
 import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -30,6 +31,7 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/properties" element={<Properties />} />
         <Route path="/properties/:id" element={<PropertyDetails />} />
+        <Route path="/tools" element={<Tools />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/contact" element={<Contact />} />
       </Route>

@@ -13,7 +13,7 @@ import {
   FiEye,
   FiEyeOff,
 } from 'react-icons/fi';
-import squareupLogo from '@/assets/squareup-logo.jpg';
+import Logo from '@/components/common/Logo';
 import { useAuth } from '@/context/AuthContext';
 
 const loginSchema = z.object({
@@ -93,14 +93,11 @@ export default function LoginForm() {
           transition={{ duration: 0.4 }}
           className="w-full max-w-[440px] bg-white rounded-3xl shadow-sm border border-slate-200/80 p-8 sm:p-10 my-auto"
         >
-          {/* Logo & Header */}
-          <div className="mb-8 text-center">
-            <Link to="/" className="inline-flex items-center gap-2.5 text-slate-900 mb-4">
-              <img src={squareupLogo} alt="SquareUp" className="h-9 w-auto rounded-md" />
-              <span className="font-extrabold text-2xl tracking-tight leading-none">
-                SquareUp<span className="text-indigo-600">.</span>
-              </span>
-            </Link>
+          {/* Single Logo Component */}
+          <div className="mb-8 text-center flex flex-col items-center">
+            <div className="mb-4">
+              <Logo className="h-10 w-auto" />
+            </div>
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-1">Welcome Back</h1>
             <p className="text-slate-500 text-xs font-medium">Please enter your partner credentials to sign in.</p>
           </div>

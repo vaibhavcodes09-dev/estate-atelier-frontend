@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiMail, FiArrowLeft, FiCheckCircle, FiSend } from 'react-icons/fi';
-import squareupLogo from '@/assets/squareup-logo.jpg';
+import Logo from '@/components/common/Logo';
 import { forgotPassword } from '@/services/authService';
 import { useToast } from '@/context/ToastContext';
 
@@ -33,14 +33,11 @@ export default function ForgotPassword() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md bg-white rounded-3xl p-8 sm:p-10 shadow-sm border border-slate-200/80"
       >
-        {/* Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2.5 mb-4">
-            <img src={squareupLogo} alt="SquareUp" className="h-9 w-auto rounded-md" />
-            <span className="font-extrabold text-2xl tracking-tight leading-none text-slate-900">
-              SquareUp<span className="text-indigo-600">.</span>
-            </span>
-          </Link>
+        {/* Logo Component */}
+        <div className="text-center mb-8 flex flex-col items-center">
+          <div className="mb-4">
+            <Logo className="h-10 w-auto" />
+          </div>
 
           <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">Reset Password</h1>
           <p className="text-xs font-medium text-slate-500">

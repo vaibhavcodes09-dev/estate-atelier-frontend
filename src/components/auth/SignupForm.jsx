@@ -14,7 +14,7 @@ import {
   FiEye,
   FiEyeOff,
 } from 'react-icons/fi';
-import squareupLogo from '@/assets/squareup-logo.jpg';
+import Logo from '@/components/common/Logo';
 import { useAuth } from '@/context/AuthContext';
 
 const signupSchema = z
@@ -101,14 +101,11 @@ export default function SignupForm() {
           transition={{ duration: 0.4 }}
           className="w-full max-w-[460px] bg-white rounded-3xl shadow-sm border border-slate-200/80 p-8 sm:p-10 my-8"
         >
-          {/* Logo & Header */}
-          <div className="mb-6 text-center">
-            <Link to="/" className="inline-flex items-center gap-2.5 text-slate-900 mb-3">
-              <img src={squareupLogo} alt="SquareUp" className="h-9 w-auto rounded-md" />
-              <span className="font-extrabold text-2xl tracking-tight leading-none">
-                SquareUp<span className="text-indigo-600">.</span>
-              </span>
-            </Link>
+          {/* Logo Component */}
+          <div className="mb-6 text-center flex flex-col items-center">
+            <div className="mb-3">
+              <Logo className="h-10 w-auto" />
+            </div>
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-1">Create Partner Account</h1>
             <p className="text-slate-500 text-xs font-medium">Join property owners and consultants today.</p>
           </div>

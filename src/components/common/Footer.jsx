@@ -10,38 +10,26 @@ import {
   Mail,
   ArrowRight,
 } from 'lucide-react';
-import squareupLogo from '../../assets/squareup-logo.jpg';
+import Logo from '@/components/common/Logo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-slate-950 text-white pt-16 pb-8 border-t border-slate-800">
+    <footer className="w-full bg-slate-950 text-white pt-16 pb-12 border-t border-slate-800">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
           
-          {/* Column 1: Brand & Logo */}
+          {/* Column 1: Brand Logo & Social */}
           <div className="lg:pr-6">
-            <Link to="/" className="flex items-center gap-3 mb-6 group">
-              <img
-                src={squareupLogo}
-                alt="SquareUp Logo"
-                className="h-11 w-auto object-contain rounded-lg shadow-sm"
-              />
-              <div className="flex flex-col">
-                <span className="font-extrabold text-2xl tracking-tight leading-none text-white">
-                  SquareUp<span className="text-indigo-500">.</span>
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 mt-1">
-                  Real Estate Platform
-                </span>
-              </div>
-            </Link>
+            <div className="mb-6">
+              <Logo variant="dark" className="h-11 sm:h-12 w-auto" />
+            </div>
             
             <p className="text-slate-400 text-sm leading-relaxed mb-8 font-normal">
-              SquareUp makes buying, renting, and selling properties simple, transparent, and hassle-free. Serving verified listings across Etawah, Jaswant Nagar, Saifai, and NCR.
+              SquareUp Properties makes buying, renting, and selling properties simple, transparent, and hassle-free. Serving verified listings across Etawah, Jaswant Nagar, Saifai, and NCR.
             </p>
             
             {/* Social Links */}
@@ -68,6 +56,7 @@ const Footer = () => {
               {[
                 { name: 'Home Overview', path: '/' },
                 { name: 'Browse All Properties', path: '/properties' },
+                { name: 'Real Estate Tools & Calculators', path: '/tools' },
                 { name: 'Partner Dashboard', path: '/dashboard' },
                 { name: 'Post New Property', path: '/add-property' },
                 { name: 'Contact Support', path: '/contact' },
@@ -136,7 +125,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom Divider & Copyright */}
-        <div className="border-t border-slate-850 pt-8 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <div className="border-t border-slate-800 pt-8 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <p className="text-slate-500 text-xs font-medium">
             © {currentYear} SquareUp Technologies. All rights reserved.
           </p>

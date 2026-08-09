@@ -1,18 +1,19 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '@/components/common/Navbar';
 import Footer from '@/components/common/Footer';
+import MobileBottomNav from '@/components/common/MobileBottomNav';
+import LocationBanner from '@/components/location/LocationBanner';
 
-// MainLayout — wraps all public-facing pages (Home, Properties, Contact, etc.)
-// with the shared Navbar at the top and Footer at the bottom. The page content
-// is injected via <Outlet /> from React Router.
 export default function MainLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col pb-16 lg:pb-0">
       <Navbar />
+      <LocationBanner />
       <main className="flex-1">
         <Outlet />
       </main>
       <Footer />
+      <MobileBottomNav />
     </div>
   );
 }

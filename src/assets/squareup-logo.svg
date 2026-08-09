@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 140" fill="none">
+  <!-- Left Icon Graphic -->
+  <g transform="translate(10, 8)">
+    <!-- Red Polygon Block -->
+    <path d="M16 68 L48 38 L48 84 L16 100 Z" fill="#F42424" />
+    
+    <!-- Navy Rear Spire Building -->
+    <path d="M51 28 L65 40 L65 92 L51 92 Z" fill="#0A1D37" />
+
+    <!-- High-rise Building with Diagonal Window Slits -->
+    <path d="M80 22 L124 38 L124 112 L80 112 Z" fill="#0A1D37" />
+    <!-- Diagonal Slit Lines -->
+    <line x1="84" y1="36" x2="120" y2="49" stroke="#FFFFFF" stroke-width="3" />
+    <line x1="84" y1="46" x2="120" y2="59" stroke="#FFFFFF" stroke-width="3" />
+    <line x1="84" y1="56" x2="120" y2="69" stroke="#FFFFFF" stroke-width="3" />
+    <line x1="84" y1="66" x2="120" y2="79" stroke="#FFFFFF" stroke-width="3" />
+    <line x1="84" y1="76" x2="120" y2="89" stroke="#FFFFFF" stroke-width="3" />
+    <line x1="84" y1="86" x2="120" y2="99" stroke="#FFFFFF" stroke-width="3" />
+
+    <!-- Chimney on Roof -->
+    <rect x="66" y="74" width="7" height="18" fill="#0A1D37" />
+
+    <!-- Front House Roof Peak and Base Line -->
+    <path d="M2 112 L48 66 L94 112" stroke="#0A1D37" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter" fill="none" />
+    <path d="M0 112 H126" stroke="#0A1D37" stroke-width="8" stroke-linecap="square" />
+    
+    <!-- Small Window in Roof Peak -->
+    <g transform="translate(42, 94)">
+      <rect x="0" y="0" width="5" height="5" fill="#0A1D37" />
+      <rect x="7" y="0" width="5" height="5" fill="#0A1D37" />
+      <rect x="0" y="7" width="5" height="5" fill="#0A1D37" />
+      <rect x="7" y="7" width="5" height="5" fill="#0A1D37" />
+    </g>
+  </g>
+
+  <!-- Right Text: SQUAREUP PROPERTIES (Exact layout & font style) -->
+  <g fill="#0A1D37">
+    <text x="145" y="70" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="44" letter-spacing="1">SQUAREUP</text>
+    <text x="175" y="106" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="800" font-size="30" letter-spacing="4">PROPERTIES</text>
+  </g>
+</svg>
