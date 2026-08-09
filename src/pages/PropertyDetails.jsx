@@ -118,7 +118,7 @@ export default function PropertyDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 pt-28 pb-20 max-w-7xl mx-auto px-4">
+      <div className="min-h-screen bg-slate-50 pt-24 sm:pt-28 pb-24 lg:pb-20 max-w-7xl mx-auto px-4">
         <div className="h-96 w-full rounded-3xl bg-white animate-pulse border border-slate-100 mb-8" />
         <div className="h-64 w-full rounded-3xl bg-white animate-pulse border border-slate-100" />
       </div>
@@ -128,8 +128,8 @@ export default function PropertyDetails() {
   // Graceful 404 handling if property ID is invalid
   if (!property) {
     return (
-      <div className="min-h-[70vh] bg-slate-50 pt-28 pb-20 flex items-center justify-center px-4">
-        <div className="bg-white p-10 sm:p-14 rounded-3xl border border-slate-200 text-center max-w-lg shadow-sm">
+      <div className="min-h-[70vh] bg-slate-50 pt-24 sm:pt-28 pb-24 lg:pb-20 flex items-center justify-center px-4">
+        <div className="bg-white p-8 sm:p-14 rounded-3xl border border-slate-200 text-center max-w-lg shadow-sm">
           <h2 className="text-2xl font-bold text-slate-900 mb-2">Property Not Found</h2>
           <p className="text-slate-500 text-sm mb-6">
             The property listing you are looking for may have been removed or does not exist.
@@ -147,7 +147,7 @@ export default function PropertyDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/60 pb-20 pt-28">
+    <div className="min-h-screen bg-slate-50/60 pb-24 lg:pb-20 pt-20 sm:pt-28">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* --- Breadcrumbs --- */}
@@ -216,7 +216,7 @@ export default function PropertyDetails() {
                 key={activeImage}
                 initial={{ opacity: 0.85 }}
                 animate={{ opacity: 1 }}
-                className="relative h-[350px] sm:h-[450px] w-full rounded-2xl overflow-hidden mb-3 bg-slate-100"
+                className="relative h-[300px] sm:h-[450px] w-full rounded-2xl overflow-hidden mb-3 bg-slate-100"
               >
                 <img src={activeImage} alt={property.title} className="w-full h-full object-cover" />
               </motion.div>
@@ -265,7 +265,7 @@ export default function PropertyDetails() {
             </div>
 
             {/* Description */}
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/80">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80">
               <h3 className="text-xl font-bold text-slate-900 mb-4 tracking-tight">About this Property</h3>
               <p className="text-slate-600 text-sm leading-relaxed font-normal whitespace-pre-line">
                 {property.description}
@@ -274,7 +274,7 @@ export default function PropertyDetails() {
 
             {/* Amenities */}
             {property.amenities && (
-              <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/80">
+              <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80">
                 <h3 className="text-xl font-bold text-slate-900 mb-6 tracking-tight">Features & Amenities</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {property.amenities.map((amenity, index) => (
@@ -288,7 +288,7 @@ export default function PropertyDetails() {
             )}
 
             {/* Map Placeholder */}
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/80">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80">
               <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-indigo-600" /> Location Map
               </h3>
@@ -394,15 +394,15 @@ export default function PropertyDetails() {
 
       </div>
 
-      {/* --- TOUR SCHEDULE MODAL --- */}
+      {/* --- TOUR SCHEDULE MODAL (High z-index z-[9995]) --- */}
       <AnimatePresence>
         {tourModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[9995] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 relative"
+              className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto"
             >
               <button
                 onClick={() => setTourModalOpen(false)}
@@ -476,15 +476,15 @@ export default function PropertyDetails() {
         )}
       </AnimatePresence>
 
-      {/* --- MAKE OFFER MODAL --- */}
+      {/* --- MAKE OFFER MODAL (High z-index z-[9995]) --- */}
       <AnimatePresence>
         {offerModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[9995] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 relative"
+              className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto"
             >
               <button
                 onClick={() => setOfferModalOpen(false)}
