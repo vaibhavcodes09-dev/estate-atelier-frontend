@@ -1,26 +1,40 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiSearch, FiHeart, FiUser } from 'react-icons/fi';
+import { FiHome, FiSearch, FiHeart, FiUser, FiLogIn } from 'react-icons/fi';
 import { Calculator } from 'lucide-react';
 import { useWishlist } from '@/context/WishlistContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function MobileBottomNav() {
   const location = useLocation();
   const { wishlistCount } = useWishlist();
+  const { currentUser } = useAuth();
   const path = location.pathname;
 
   const isAccountActive =
     path === '/dashboard' ||
     path === '/profile' ||
+    path === '/login' ||
+    path === '/signup' ||
     path === '/add-property' ||
     path.startsWith('/edit-property');
+
+  // If logged in, destination is /dashboard (or /profile if already on /dashboard); if guest, destination is /login
+  const accountDestination = currentUser
+    ? path === '/dashboard'
+      ? '/profile'
+      : '/dashboard'
+    : '/login';
+
+  const accountLabel = currentUser ? 'Account' : 'Sign In';
+  const AccountIcon = currentUser ? FiUser : FiLogIn;
 
   const navItems = [
     { to: '/', label: 'Home', icon: FiHome, isActive: path === '/' },
     { to: '/properties', label: 'Properties', icon: FiSearch, isActive: path.startsWith('/properties') },
     { to: '/tools', label: 'Tools', icon: Calculator, isActive: path === '/tools' },
     { to: '/wishlist', label: 'Wishlist', icon: FiHeart, badge: wishlistCount, isActive: path === '/wishlist' },
-    { to: '/dashboard', label: 'Account', icon: FiUser, isActive: isAccountActive },
+    { to: accountDestination, label: accountLabel, icon: AccountIcon, isActive: isAccountActive },
   ];
 
   return (
@@ -32,7 +46,7 @@ export default function MobileBottomNav() {
           <Link
             key={item.to}
             to={item.to}
-            className={`relative flex flex-col items-center justify-center py-1 px-3.5 rounded-xl transition-all ${
+            className={`relative flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all ${
               item.isActive
                 ? 'text-indigo-600 font-bold'
                 : 'text-slate-500 hover:text-slate-900 font-semibold'
